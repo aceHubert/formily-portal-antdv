@@ -12,6 +12,7 @@ esm/
 temp_esm/
 dist/
 build/
+types/
 coverage/
 node_modules/
 examples/test

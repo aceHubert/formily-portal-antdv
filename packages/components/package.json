@@ -3,7 +3,7 @@
   "version": "1.0.0-alpha.0",
   "main": "lib",
   "module": "esm",
-  "types": "lib/index.d.ts",
+  "types": "types/index.d.ts",
   "umd:main": "dist/lj-portal.antdv.umd.production.js",
   "unpkg": "dist/lj-portal.antdv.umd.production.js",
   "jsdelivr": "dist/lj-portal.antdv.umd.production.js",

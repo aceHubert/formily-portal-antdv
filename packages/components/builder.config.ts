@@ -8,5 +8,3 @@ export const BuilderConfig: IBuilderConfig = {
     'ant-design-vue': 'Antd',
   },
 }
-
-export const aa = {}
