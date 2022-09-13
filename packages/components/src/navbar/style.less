@@ -1,0 +1,64 @@
+@import '../__builtins__/styles/common.less';
+@import './menu.less';
+
+@nav-prefix-cls: ~'@{lj-portal-prefix}-nav';
+@nav-background-color: @primary-color;
+@nav-z-index:1000;
+@nav-height: 68px;
+
+.@{nav-prefix-cls}{
+  position: relative;
+  width: 100%;
+
+  &__placeholder{
+    width: 100%;
+    height: @nav-height;
+  }
+
+  &__container{
+    width: 100%;
+    height: @nav-height;
+    color: #fff;
+    background-color: @nav-background-color;
+  }
+
+  &--fixed &__container{
+    position: fixed;
+    top:0;
+    width: 100%;
+    z-index: @nav-z-index;
+  }
+
+  &-logo{
+    margin: 0 16px;
+    max-height: 100%;
+    cursor: pointer;
+  }
+
+  &-content{
+    padding: 10px 0;
+    margin: 0 auto;
+    max-width: 100%;
+    height: 100%;
+    display: flex; 
+    box-sizing: border-box;
+
+    &__left, &__right{
+      vertical-align: middle;
+      overflow: hidden;
+      white-space: nowrap;
+    }
+    
+    &__middle{
+      padding: 0 10px;
+      flex: 1 1 0%;
+      min-width: 0px;
+      display: flex;
+
+      &--right{
+        justify-content: flex-end;
+      }
+    }
+  }
+}
+

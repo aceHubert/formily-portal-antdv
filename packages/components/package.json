@@ -1,0 +1,58 @@
+{
+  "name": "@lj-portal/antdv",
+  "version": "1.0.0-alpha.0",
+  "main": "lib",
+  "module": "esm",
+  "types": "lib/index.d.ts",
+  "umd:main": "dist/lj-portal.antdv.umd.production.js",
+  "unpkg": "dist/lj-portal.antdv.umd.production.js",
+  "jsdelivr": "dist/lj-portal.antdv.umd.production.js",
+  "jsnext:main": "esm",
+  "sideEffects": [
+    "dist/*",
+    "esm/*.js",
+    "lib/*.js",
+    "src/*.ts",
+    "*.less",
+    "*.scss",
+    "**/*/style.js"
+  ],
+  "scripts": {
+    "postinstall": "vue-demi-fix",
+    "serve": "tsc --project tsconfig.build.json --module es2015 --declaration --declarationDir types --outDir esm -watch",
+    "build": "rimraf esm lib dist types && formily-tpl build && yarn build:types",
+    "build:types": "tsc --project tsconfig.types.json"
+  },
+  "dependencies": {
+    "@formily/core": "2.2.2",
+    "@formily/grid": "2.2.2",
+    "@formily/json-schema": "2.2.2",
+    "@formily/reactive": "2.2.2",
+    "@formily/reactive-vue": "2.2.2",
+    "@formily/shared": "2.2.2",
+    "@formily/vue": "2.2.2",
+    "lodash.kebabcase": "^4.1.1",
+    "vue-demi": "*"
+  },
+  "devDependencies": {
+    "@types/lodash.kebabcase": "^4.1.7",
+    "ant-design-vue": "^1.7.8",
+    "vue": "^2.6.14"
+  },
+  "peerDependencies": {
+    "@vue/composition-api": "^1.0.0-beta.1",
+    "vue": "^2.6.0 || >=3.0.0-rc.0"
+  },
+  "peerDependenciesMeta": {
+    "@vue/composition-api": {
+      "optional": true
+    }
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "engines": {
+    "npm": ">=3.0.0"
+  },
+  "license": "MIT"
+}
