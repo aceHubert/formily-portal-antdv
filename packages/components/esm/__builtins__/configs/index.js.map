@@ -1,0 +1,1 @@
+{"version":3,"file":"index.js","sourceRoot":"lib/","sources":["__builtins__/configs/index.ts"],"names":[],"mappings":"AAAA,MAAM,CAAC,IAAM,WAAW,GAAG,iBAAiB,CAAC","sourcesContent":["export const stylePrefix = 'lj-portal-antdv';\n"]}

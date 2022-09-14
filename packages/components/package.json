@@ -24,13 +24,13 @@
     "build:types": "tsc --project tsconfig.types.json"
   },
   "dependencies": {
-    "@formily/core": "2.2.2",
-    "@formily/grid": "2.2.2",
-    "@formily/json-schema": "2.2.2",
-    "@formily/reactive": "2.2.2",
-    "@formily/reactive-vue": "2.2.2",
-    "@formily/shared": "2.2.2",
-    "@formily/vue": "2.2.2",
+    "@formily/core": "^2.2.2",
+    "@formily/grid": "^2.2.2",
+    "@formily/json-schema": "^2.2.2",
+    "@formily/reactive": "^2.2.2",
+    "@formily/reactive-vue": "^2.2.2",
+    "@formily/shared": "^2.2.2",
+    "@formily/vue": "^2.2.2",
     "lodash.kebabcase": "^4.1.1",
     "vue-demi": "*"
   },

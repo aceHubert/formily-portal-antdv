@@ -1,0 +1,1 @@
+{"version":3,"file":"consumer-props.js","sourceRoot":"lib/","sources":["page/consumer-props.ts"],"names":[],"mappings":"AAAA,MAAM,CAAC,IAAM,iBAAiB,GAA+B;IAC3D,cAAc,EAAE,QAAQ;CACzB,CAAC","sourcesContent":["export const PageConsumerProps: { containerWidth: string } = {\n  containerWidth: '1120px',\n};\n"]}
