@@ -9,6 +9,7 @@ var vue_demi_1 = require("vue-demi");
 var core_1 = require("@formily/core");
 var vue_1 = require("@formily/vue");
 var shared_1 = require("../__builtins__/shared");
+var sfc_helper_1 = require("../__builtins__/sfc-helper");
 var consumer_props_1 = require("./consumer-props");
 var useApi_1 = require("./useApi");
 exports.Page = (0, vue_demi_1.defineComponent)({
@@ -21,7 +22,7 @@ exports.Page = (0, vue_demi_1.defineComponent)({
     setup: function (props, _a) {
         var slots = _a.slots;
         var top = (0, vue_1.useForm)();
-        (0, vue_demi_1.useCssVars)(function () {
+        (0, sfc_helper_1.useCssVars)(function () {
             return props.themeVars
                 ? Object.keys(props.themeVars || {}).reduce(function (prev, curr) {
                     prev["theme-".concat((0, lodash_kebabcase_1.default)(curr))] = props.themeVars[curr];

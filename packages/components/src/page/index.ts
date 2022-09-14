@@ -1,8 +1,9 @@
 import kebabCase from 'lodash.kebabcase'
-import { defineComponent, provide, useCssVars } from 'vue-demi'
+import { defineComponent, provide } from 'vue-demi'
 import { createForm } from '@formily/core'
 import { FormProvider, h, useForm } from '@formily/vue'
 import { parseStyleUnit } from '../__builtins__/shared'
+import { useCssVars } from '../__builtins__/sfc-helper'
 import { PageConsumerProps } from './consumer-props'
 import { PageInjectKey } from './useApi'
 

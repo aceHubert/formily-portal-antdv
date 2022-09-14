@@ -509,8 +509,8 @@
     // can we use __proto__?
     var hasProto = '__proto__' in {};
     // Browser environment sniffing
-    var inBrowser = typeof window !== 'undefined';
-    var UA = inBrowser && window.navigator.userAgent.toLowerCase();
+    var inBrowser$1 = typeof window !== 'undefined';
+    var UA = inBrowser$1 && window.navigator.userAgent.toLowerCase();
     var isIE = UA && /msie|trident/.test(UA);
     var isIE9 = UA && UA.indexOf('msie 9.0') > 0;
     var isEdge = UA && UA.indexOf('edge/') > 0;
@@ -523,7 +523,7 @@
     // @ts-expect-error firebox support
     var nativeWatch = {}.watch;
     var supportsPassive = false;
-    if (inBrowser) {
+    if (inBrowser$1) {
         try {
             var opts = {};
             Object.defineProperty(opts, 'passive', {
@@ -542,7 +542,7 @@
     var isServerRendering = function () {
         if (_isServer === undefined) {
             /* istanbul ignore if */
-            if (!inBrowser && typeof global !== 'undefined') {
+            if (!inBrowser$1 && typeof global !== 'undefined') {
                 // detect presence of vue-server-renderer and avoid
                 // Webpack shimming the process
                 _isServer =
@@ -555,7 +555,7 @@
         return _isServer;
     };
     // detect devtools
-    var devtools = inBrowser && window.__VUE_DEVTOOLS_GLOBAL_HOOK__;
+    var devtools = inBrowser$1 && window.__VUE_DEVTOOLS_GLOBAL_HOOK__;
     /* istanbul ignore next */
     function isNative(Ctor) {
         return typeof Ctor === 'function' && /native code/.test(Ctor.toString());
@@ -589,6 +589,16 @@
     }
 
     var currentInstance = null;
+    /**
+     * This is exposed for compatibility with v3 (e.g. some functions in VueUse
+     * relies on it). Do not use this internally, just use `currentInstance`.
+     *
+     * @internal this function needs manual type declaration because it relies
+     * on previously manually authored types from Vue 2
+     */
+    function getCurrentInstance() {
+        return currentInstance && { proxy: currentInstance };
+    }
     /**
      * @internal
      */
@@ -992,10 +1002,10 @@
     }
     function set(target, key, val) {
         if (process.env.NODE_ENV !== 'production' && (isUndef(target) || isPrimitive(target))) {
-            warn("Cannot set reactive property on undefined, null, or primitive value: ".concat(target));
+            warn$1("Cannot set reactive property on undefined, null, or primitive value: ".concat(target));
         }
         if (isReadonly(target)) {
-            process.env.NODE_ENV !== 'production' && warn("Set operation on key \"".concat(key, "\" failed: target is readonly."));
+            process.env.NODE_ENV !== 'production' && warn$1("Set operation on key \"".concat(key, "\" failed: target is readonly."));
             return;
         }
         var ob = target.__ob__;
@@ -1014,7 +1024,7 @@
         }
         if (target._isVue || (ob && ob.vmCount)) {
             process.env.NODE_ENV !== 'production' &&
-                warn('Avoid adding reactive properties to a Vue instance or its root $data ' +
+                warn$1('Avoid adding reactive properties to a Vue instance or its root $data ' +
                     'at runtime - declare it upfront in the data option.');
             return val;
         }
@@ -1039,7 +1049,7 @@
     }
     function del(target, key) {
         if (process.env.NODE_ENV !== 'production' && (isUndef(target) || isPrimitive(target))) {
-            warn("Cannot delete reactive property on undefined, null, or primitive value: ".concat(target));
+            warn$1("Cannot delete reactive property on undefined, null, or primitive value: ".concat(target));
         }
         if (isArray(target) && isValidArrayIndex(key)) {
             target.splice(key, 1);
@@ -1048,13 +1058,13 @@
         var ob = target.__ob__;
         if (target._isVue || (ob && ob.vmCount)) {
             process.env.NODE_ENV !== 'production' &&
-                warn('Avoid deleting properties on a Vue instance or its root $data ' +
+                warn$1('Avoid deleting properties on a Vue instance or its root $data ' +
                     '- just set it to null.');
             return;
         }
         if (isReadonly(target)) {
             process.env.NODE_ENV !== 'production' &&
-                warn("Delete operation on key \"".concat(key, "\" failed: target is readonly."));
+                warn$1("Delete operation on key \"".concat(key, "\" failed: target is readonly."));
             return;
         }
         if (!hasOwn(target, key)) {
@@ -1105,20 +1115,20 @@
         if (!isReadonly(target)) {
             if (process.env.NODE_ENV !== 'production') {
                 if (isArray(target)) {
-                    warn("Avoid using Array as root value for ".concat(shallow ? "shallowReactive()" : "reactive()", " as it cannot be tracked in watch() or watchEffect(). Use ").concat(shallow ? "shallowRef()" : "ref()", " instead. This is a Vue-2-only limitation."));
+                    warn$1("Avoid using Array as root value for ".concat(shallow ? "shallowReactive()" : "reactive()", " as it cannot be tracked in watch() or watchEffect(). Use ").concat(shallow ? "shallowRef()" : "ref()", " instead. This is a Vue-2-only limitation."));
                 }
                 var existingOb = target && target.__ob__;
                 if (existingOb && existingOb.shallow !== shallow) {
-                    warn("Target is already a ".concat(existingOb.shallow ? "" : "non-", "shallow reactive object, and cannot be converted to ").concat(shallow ? "" : "non-", "shallow."));
+                    warn$1("Target is already a ".concat(existingOb.shallow ? "" : "non-", "shallow reactive object, and cannot be converted to ").concat(shallow ? "" : "non-", "shallow."));
                 }
             }
             var ob = observe(target, shallow, isServerRendering() /* ssr mock reactivity */);
             if (process.env.NODE_ENV !== 'production' && !ob) {
                 if (target == null || isPrimitive(target)) {
-                    warn("value cannot be made reactive: ".concat(String(target)));
+                    warn$1("value cannot be made reactive: ".concat(String(target)));
                 }
                 if (isCollectionType(target)) {
-                    warn("Vue 2 does not support reactive collection types such as Map or Set.");
+                    warn$1("Vue 2 does not support reactive collection types such as Map or Set.");
                 }
             }
         }
@@ -1208,7 +1218,7 @@
     // implementation
     function watch(source, cb, options) {
         if (process.env.NODE_ENV !== 'production' && typeof cb !== 'function') {
-            warn("`watch(fn, options?)` signature has been moved to a separate API. " +
+            warn$1("`watch(fn, options?)` signature has been moved to a separate API. " +
                 "Use `watchEffect(fn, options?)` instead. `watch` now only " +
                 "supports `watch(source, cb, options?) signature.");
         }
@@ -1218,16 +1228,16 @@
         var _b = _a === void 0 ? emptyObject : _a, immediate = _b.immediate, deep = _b.deep, _c = _b.flush, flush = _c === void 0 ? 'pre' : _c, onTrack = _b.onTrack, onTrigger = _b.onTrigger;
         if (process.env.NODE_ENV !== 'production' && !cb) {
             if (immediate !== undefined) {
-                warn("watch() \"immediate\" option is only respected when using the " +
+                warn$1("watch() \"immediate\" option is only respected when using the " +
                     "watch(source, callback, options?) signature.");
             }
             if (deep !== undefined) {
-                warn("watch() \"deep\" option is only respected when using the " +
+                warn$1("watch() \"deep\" option is only respected when using the " +
                     "watch(source, callback, options?) signature.");
             }
         }
         var warnInvalidSource = function (s) {
-            warn("Invalid watch source: ".concat(s, ". A watch source can only be a getter/effect ") +
+            warn$1("Invalid watch source: ".concat(s, ". A watch source can only be a getter/effect ") +
                 "function, a ref, a reactive object, or an array of these types.");
         };
         var instance = currentInstance;
@@ -1435,7 +1445,7 @@
                 }
             }
             else if (process.env.NODE_ENV !== 'production') {
-                warn("cannot run an inactive effect scope.");
+                warn$1("cannot run an inactive effect scope.");
             }
         };
         /**
@@ -1493,7 +1503,7 @@
     function provide(key, value) {
         if (!currentInstance) {
             if (process.env.NODE_ENV !== 'production') {
-                warn("provide() can only be used inside setup().");
+                warn$1("provide() can only be used inside setup().");
             }
         }
         else {
@@ -1536,11 +1546,11 @@
                     : defaultValue;
             }
             else if (process.env.NODE_ENV !== 'production') {
-                warn("injection \"".concat(String(key), "\" not found."));
+                warn$1("injection \"".concat(String(key), "\" not found."));
             }
         }
         else if (process.env.NODE_ENV !== 'production') {
-            warn("inject() can only be used inside setup() or functional components.");
+            warn$1("inject() can only be used inside setup() or functional components.");
         }
     }
 
@@ -1583,7 +1593,7 @@
             event = normalizeEvent(name);
             if (isUndef(cur)) {
                 process.env.NODE_ENV !== 'production' &&
-                    warn("Invalid handler for event \"".concat(event.name, "\": got ") + String(cur), vm);
+                    warn$1("Invalid handler for event \"".concat(event.name, "\": got ") + String(cur), vm);
             }
             else if (isUndef(old)) {
                 if (isUndef(cur.fns)) {
@@ -1831,7 +1841,7 @@
             props = props || {};
             if (bindObject) {
                 if (process.env.NODE_ENV !== 'production' && !isObject(bindObject)) {
-                    warn('slot v-bind without argument expects an Object', this);
+                    warn$1('slot v-bind without argument expects an Object', this);
                 }
                 props = extend(extend({}, bindObject), props);
             }
@@ -1894,7 +1904,7 @@
         if (value) {
             if (!isObject(value)) {
                 process.env.NODE_ENV !== 'production' &&
-                    warn('v-bind without argument expects an Object or Array value', this);
+                    warn$1('v-bind without argument expects an Object or Array value', this);
             }
             else {
                 if (isArray(value)) {
@@ -1978,7 +1988,7 @@
     function bindObjectListeners(data, value) {
         if (value) {
             if (!isPlainObject(value)) {
-                process.env.NODE_ENV !== 'production' && warn('v-on without argument expects an Object value', this);
+                process.env.NODE_ENV !== 'production' && warn$1('v-on without argument expects an Object value', this);
             }
             else {
                 var on = (data.on = data.on ? extend({}, data.on) : {});
@@ -2026,7 +2036,7 @@
             }
             else if (process.env.NODE_ENV !== 'production' && key !== '' && key !== null) {
                 // null is a special value for explicitly removing a binding
-                warn("Invalid value for dynamic directive argument (expected string or null): ".concat(key), this);
+                warn$1("Invalid value for dynamic directive argument (expected string or null): ".concat(key), this);
             }
         }
         return baseObj;
@@ -2205,7 +2215,7 @@
             else if (isObject(setupResult)) {
                 // bindings
                 if (process.env.NODE_ENV !== 'production' && setupResult instanceof VNode) {
-                    warn("setup() should not return VNodes directly - " +
+                    warn$1("setup() should not return VNodes directly - " +
                         "return a render function instead.");
                 }
                 vm._setupState = setupResult;
@@ -2216,7 +2226,7 @@
                             proxyWithRefUnwrap(vm, setupResult, key);
                         }
                         else if (process.env.NODE_ENV !== 'production') {
-                            warn("Avoid using variables that start with _ or $ in setup().");
+                            warn$1("Avoid using variables that start with _ or $ in setup().");
                         }
                     }
                 }
@@ -2231,7 +2241,7 @@
                 }
             }
             else if (process.env.NODE_ENV !== 'production' && setupResult !== undefined) {
-                warn("setup() should return an object. Received: ".concat(setupResult === null ? 'null' : typeof setupResult));
+                warn$1("setup() should return an object. Received: ".concat(setupResult === null ? 'null' : typeof setupResult));
             }
         }
     }
@@ -2260,7 +2270,7 @@
             expose: function (exposed) {
                 if (process.env.NODE_ENV !== 'production') {
                     if (exposeCalled) {
-                        warn("expose() should be called only once per setup().", vm);
+                        warn$1("expose() should be called only once per setup().", vm);
                     }
                     exposeCalled = true;
                 }
@@ -2343,10 +2353,10 @@
         /* istanbul ignore else */
         if (process.env.NODE_ENV !== 'production') {
             defineReactive(vm, '$attrs', (parentData && parentData.attrs) || emptyObject, function () {
-                !isUpdatingChildComponent && warn("$attrs is readonly.", vm);
+                !isUpdatingChildComponent && warn$1("$attrs is readonly.", vm);
             }, true);
             defineReactive(vm, '$listeners', options._parentListeners || emptyObject, function () {
-                !isUpdatingChildComponent && warn("$listeners is readonly.", vm);
+                !isUpdatingChildComponent && warn$1("$listeners is readonly.", vm);
             }, true);
         }
         else {
@@ -2412,7 +2422,7 @@
             // return empty vnode in case the render function errored out
             if (!(vnode instanceof VNode)) {
                 if (process.env.NODE_ENV !== 'production' && isArray(vnode)) {
-                    warn('Multiple root nodes returned from render function. Render function ' +
+                    warn$1('Multiple root nodes returned from render function. Render function ' +
                         'should return a single root node.', vm);
                 }
                 vnode = createEmptyVNode();
@@ -2486,7 +2496,7 @@
             });
             var reject_1 = once(function (reason) {
                 process.env.NODE_ENV !== 'production' &&
-                    warn("Failed to resolve async component: ".concat(String(factory)) +
+                    warn$1("Failed to resolve async component: ".concat(String(factory)) +
                         (reason ? "\nReason: ".concat(reason) : ''));
                 if (isDef(factory.errorComp)) {
                     factory.error = true;
@@ -2568,7 +2578,7 @@
     function _createElement(context, tag, data, children, normalizationType) {
         if (isDef(data) && isDef(data.__ob__)) {
             process.env.NODE_ENV !== 'production' &&
-                warn("Avoid using observed data object as vnode data: ".concat(JSON.stringify(data), "\n") + 'Always create fresh vnode data objects in each render!', context);
+                warn$1("Avoid using observed data object as vnode data: ".concat(JSON.stringify(data), "\n") + 'Always create fresh vnode data objects in each render!', context);
             return createEmptyVNode();
         }
         // object syntax in v-bind
@@ -2581,7 +2591,7 @@
         }
         // warn against non-primitive key
         if (process.env.NODE_ENV !== 'production' && isDef(data) && isDef(data.key) && !isPrimitive(data.key)) {
-            warn('Avoid using non-primitive value as key, ' +
+            warn$1('Avoid using non-primitive value as key, ' +
                 'use string/number value instead.', context);
         }
         // support single function children as default scoped slot
@@ -2606,7 +2616,7 @@
                     isDef(data) &&
                     isDef(data.nativeOn) &&
                     data.tag !== 'component') {
-                    warn("The .native modifier for v-on is only valid on components but it was used on <".concat(tag, ">."), context);
+                    warn$1("The .native modifier for v-on is only valid on components but it was used on <".concat(tag, ">."), context);
                 }
                 vnode = new VNode(config.parsePlatformTagName(tag), data, children, undefined, undefined, context);
             }
@@ -2676,7 +2686,7 @@
     function h(type, props, children) {
         if (!currentInstance) {
             process.env.NODE_ENV !== 'production' &&
-                warn("globally imported h() can only be invoked when there is an active " +
+                warn$1("globally imported h() can only be invoked when there is an active " +
                     "component instance, e.g. synchronously in a component's render or setup function.");
         }
         return createElement$1(currentInstance, type, props, children, 2, true);
@@ -2742,10 +2752,10 @@
     }
     function logError(err, vm, info) {
         if (process.env.NODE_ENV !== 'production') {
-            warn("Error in ".concat(info, ": \"").concat(err.toString(), "\""), vm);
+            warn$1("Error in ".concat(info, ": \"").concat(err.toString(), "\""), vm);
         }
         /* istanbul ignore else */
-        if (inBrowser && typeof console !== 'undefined') {
+        if (inBrowser$1 && typeof console !== 'undefined') {
             console.error(err);
         }
         else {
@@ -2866,13 +2876,13 @@
      * Runtime helper for SFC's CSS variable injection feature.
      * @private
      */
-    function useCssVars(getter) {
-        if (!inBrowser && !false)
+    function useCssVars$1(getter) {
+        if (!inBrowser$1 && !false)
             return;
         var instance = currentInstance;
         if (!instance) {
             process.env.NODE_ENV !== 'production' &&
-                warn("useCssVars is called without current active component instance.");
+                warn$1("useCssVars is called without current active component instance.");
             return;
         }
         watchPostEffect(function () {
@@ -2994,7 +3004,7 @@
                 if (!this.getter) {
                     this.getter = noop;
                     process.env.NODE_ENV !== 'production' &&
-                        warn("Failed watching path: \"".concat(expOrFn, "\" ") +
+                        warn$1("Failed watching path: \"".concat(expOrFn, "\" ") +
                             'Watcher only accepts simple dot-delimited paths. ' +
                             'For full control, use a function instead.', vm);
                 }
@@ -3146,7 +3156,7 @@
     var mark;
     var measure;
     if (process.env.NODE_ENV !== 'production') {
-        var perf_1 = inBrowser && window.performance;
+        var perf_1 = inBrowser$1 && window.performance;
         /* istanbul ignore if */
         if (perf_1 &&
             // @ts-ignore
@@ -3408,12 +3418,12 @@
                 if ((vm.$options.template && vm.$options.template.charAt(0) !== '#') ||
                     vm.$options.el ||
                     el) {
-                    warn('You are using the runtime-only build of Vue where the template ' +
+                    warn$1('You are using the runtime-only build of Vue where the template ' +
                         'compiler is not available. Either pre-compile the templates into ' +
                         'render functions, or use the compiler-included build.', vm);
                 }
                 else {
-                    warn('Failed to mount component: template or render function not defined.', vm);
+                    warn$1('Failed to mount component: template or render function not defined.', vm);
                 }
             }
         }
@@ -3637,7 +3647,7 @@
     // same timestamp type when saving the flush timestamp.
     // All IE versions use low-res event timestamps, and have problematic clock
     // implementations (#9632)
-    if (inBrowser && !isIE) {
+    if (inBrowser$1 && !isIE) {
         var performance_1 = window.performance;
         if (performance_1 &&
             typeof performance_1.now === 'function' &&
@@ -3689,7 +3699,7 @@
             if (process.env.NODE_ENV !== 'production' && has[id] != null) {
                 circular[id] = (circular[id] || 0) + 1;
                 if (circular[id] > MAX_UPDATE_COUNT) {
-                    warn('You may have an infinite update loop ' +
+                    warn$1('You may have an infinite update loop ' +
                         (watcher.user
                             ? "in watcher with expression \"".concat(watcher.expression, "\"")
                             : "in a component render function."), watcher.vm);
@@ -3800,7 +3810,7 @@
                 /* istanbul ignore else */
                 if (process.env.NODE_ENV !== 'production') {
                     defineReactive(vm, key, result[key], function () {
-                        warn("Avoid mutating an injected value directly since the changes will be " +
+                        warn$1("Avoid mutating an injected value directly since the changes will be " +
                             "overwritten whenever the provided component re-renders. " +
                             "injection being mutated: \"".concat(key, "\""), vm);
                     });
@@ -3833,7 +3843,7 @@
                         : provideDefault;
                 }
                 else if (process.env.NODE_ENV !== 'production') {
-                    warn("Injection \"".concat(key, "\" not found"), vm);
+                    warn$1("Injection \"".concat(key, "\" not found"), vm);
                 }
             }
             return result;
@@ -4027,7 +4037,7 @@
         // reject.
         if (typeof Ctor !== 'function') {
             if (process.env.NODE_ENV !== 'production') {
-                warn("Invalid Component definition: ".concat(String(Ctor)), context);
+                warn$1("Invalid Component definition: ".concat(String(Ctor)), context);
             }
             return;
         }
@@ -4150,7 +4160,7 @@
         }
     }
 
-    var warn = noop;
+    var warn$1 = noop;
     var tip = noop;
     var generateComponentTrace; // work around flow check
     var formatComponentName;
@@ -4160,7 +4170,7 @@
         var classify_1 = function (str) {
             return str.replace(classifyRE_1, function (c) { return c.toUpperCase(); }).replace(/[-_]/g, '');
         };
-        warn = function (msg, vm) {
+        warn$1 = function (msg, vm) {
             if (vm === void 0) { vm = currentInstance; }
             var trace = vm ? generateComponentTrace(vm) : '';
             if (config.warnHandler) {
@@ -4251,7 +4261,7 @@
     if (process.env.NODE_ENV !== 'production') {
         strats.el = strats.propsData = function (parent, child, vm, key) {
             if (!vm) {
-                warn("option \"".concat(key, "\" can only be used during instance ") +
+                warn$1("option \"".concat(key, "\" can only be used during instance ") +
                     'creation with the `new` keyword.');
             }
             return defaultStrat(parent, child);
@@ -4328,7 +4338,7 @@
         if (!vm) {
             if (childVal && typeof childVal !== 'function') {
                 process.env.NODE_ENV !== 'production' &&
-                    warn('The "data" option should be a function ' +
+                    warn$1('The "data" option should be a function ' +
                         'that returns a per-instance value in component ' +
                         'definitions.', vm);
                 return parentVal;
@@ -4452,13 +4462,13 @@
     }
     function validateComponentName(name) {
         if (!new RegExp("^[a-zA-Z][\\-\\.0-9_".concat(unicodeRegExp.source, "]*$")).test(name)) {
-            warn('Invalid component name: "' +
+            warn$1('Invalid component name: "' +
                 name +
                 '". Component names ' +
                 'should conform to valid custom element name in html5 specification.');
         }
         if (isBuiltInTag(name) || config.isReservedTag(name)) {
-            warn('Do not use built-in or reserved HTML elements as component ' +
+            warn$1('Do not use built-in or reserved HTML elements as component ' +
                 'id: ' +
                 name);
         }
@@ -4482,7 +4492,7 @@
                     res[name] = { type: null };
                 }
                 else if (process.env.NODE_ENV !== 'production') {
-                    warn('props must be strings when using array syntax.');
+                    warn$1('props must be strings when using array syntax.');
                 }
             }
         }
@@ -4494,7 +4504,7 @@
             }
         }
         else if (process.env.NODE_ENV !== 'production') {
-            warn("Invalid value for option \"props\": expected an Array or an Object, " +
+            warn$1("Invalid value for option \"props\": expected an Array or an Object, " +
                 "but got ".concat(toRawType(props), "."), vm);
         }
         options.props = res;
@@ -4521,7 +4531,7 @@
             }
         }
         else if (process.env.NODE_ENV !== 'production') {
-            warn("Invalid value for option \"inject\": expected an Array or an Object, " +
+            warn$1("Invalid value for option \"inject\": expected an Array or an Object, " +
                 "but got ".concat(toRawType(inject), "."), vm);
         }
     }
@@ -4541,7 +4551,7 @@
     }
     function assertObjectType(name, value, vm) {
         if (!isPlainObject(value)) {
-            warn("Invalid value for option \"".concat(name, "\": expected an Object, ") +
+            warn$1("Invalid value for option \"".concat(name, "\": expected an Object, ") +
                 "but got ".concat(toRawType(value), "."), vm);
         }
     }
@@ -4613,7 +4623,7 @@
         // fallback to prototype chain
         var res = assets[id] || assets[camelizedId] || assets[PascalCaseId];
         if (process.env.NODE_ENV !== 'production' && warnMissing && !res) {
-            warn('Failed to resolve ' + type.slice(0, -1) + ': ' + id);
+            warn$1('Failed to resolve ' + type.slice(0, -1) + ': ' + id);
         }
         return res;
     }
@@ -4663,7 +4673,7 @@
         var def = prop.default;
         // warn against non-factory defaults for Object & Array
         if (process.env.NODE_ENV !== 'production' && isObject(def)) {
-            warn('Invalid default value for prop "' +
+            warn$1('Invalid default value for prop "' +
                 key +
                 '": ' +
                 'Props with type Object/Array must use a factory function ' +
@@ -4688,7 +4698,7 @@
      */
     function assertProp(prop, name, value, vm, absent) {
         if (prop.required && absent) {
-            warn('Missing required prop: "' + name + '"', vm);
+            warn$1('Missing required prop: "' + name + '"', vm);
             return;
         }
         if (value == null && !prop.required) {
@@ -4709,13 +4719,13 @@
         }
         var haveExpectedTypes = expectedTypes.some(function (t) { return t; });
         if (!valid && haveExpectedTypes) {
-            warn(getInvalidTypeMessage(name, value, expectedTypes), vm);
+            warn$1(getInvalidTypeMessage(name, value, expectedTypes), vm);
             return;
         }
         var validator = prop.validator;
         if (validator) {
             if (!validator(value)) {
-                warn('Invalid prop: custom validator check failed for prop "' + name + '".', vm);
+                warn$1('Invalid prop: custom validator check failed for prop "' + name + '".', vm);
             }
         }
     }
@@ -4742,7 +4752,7 @@
                 valid = value instanceof type;
             }
             catch (e) {
-                warn('Invalid prop type: "' + String(type) + '" is not a constructor', vm);
+                warn$1('Invalid prop type: "' + String(type) + '" is not a constructor', vm);
                 valid = false;
             }
         }
@@ -4826,14 +4836,14 @@
             'require' // for Webpack/Browserify
         );
         var warnNonPresent_1 = function (target, key) {
-            warn("Property or method \"".concat(key, "\" is not defined on the instance but ") +
+            warn$1("Property or method \"".concat(key, "\" is not defined on the instance but ") +
                 'referenced during render. Make sure that this property is reactive, ' +
                 'either in the data option, or for class-based components, by ' +
                 'initializing the property. ' +
                 'See: https://v2.vuejs.org/v2/guide/reactivity.html#Declaring-Reactive-Properties.', target);
         };
         var warnReservedPrefix_1 = function (target, key) {
-            warn("Property \"".concat(key, "\" must be accessed with \"$data.").concat(key, "\" because ") +
+            warn$1("Property \"".concat(key, "\" must be accessed with \"$data.").concat(key, "\" because ") +
                 'properties starting with "$" or "_" are not proxied in the Vue instance to ' +
                 'prevent conflicts with Vue internals. ' +
                 'See: https://v2.vuejs.org/v2/api/#data', target);
@@ -4844,7 +4854,7 @@
             config.keyCodes = new Proxy(config.keyCodes, {
                 set: function (target, key, value) {
                     if (isBuiltInModifier_1(key)) {
-                        warn("Avoid overwriting built-in modifier in config.keyCodes: .".concat(key));
+                        warn$1("Avoid overwriting built-in modifier in config.keyCodes: .".concat(key));
                         return false;
                     }
                     else {
@@ -4949,11 +4959,11 @@
                 var hyphenatedKey = hyphenate(key);
                 if (isReservedAttribute(hyphenatedKey) ||
                     config.isReservedAttr(hyphenatedKey)) {
-                    warn("\"".concat(hyphenatedKey, "\" is a reserved attribute and cannot be used as component prop."), vm);
+                    warn$1("\"".concat(hyphenatedKey, "\" is a reserved attribute and cannot be used as component prop."), vm);
                 }
                 defineReactive(props, key, value, function () {
                     if (!isRoot && !isUpdatingChildComponent) {
-                        warn("Avoid mutating a prop directly since the value will be " +
+                        warn$1("Avoid mutating a prop directly since the value will be " +
                             "overwritten whenever the parent component re-renders. " +
                             "Instead, use a data or computed property based on the prop's " +
                             "value. Prop being mutated: \"".concat(key, "\""), vm);
@@ -4981,7 +4991,7 @@
         if (!isPlainObject(data)) {
             data = {};
             process.env.NODE_ENV !== 'production' &&
-                warn('data functions should return an object:\n' +
+                warn$1('data functions should return an object:\n' +
                     'https://v2.vuejs.org/v2/guide/components.html#data-Must-Be-a-Function', vm);
         }
         // proxy data on instance
@@ -4993,12 +5003,12 @@
             var key = keys[i];
             if (process.env.NODE_ENV !== 'production') {
                 if (methods && hasOwn(methods, key)) {
-                    warn("Method \"".concat(key, "\" has already been defined as a data property."), vm);
+                    warn$1("Method \"".concat(key, "\" has already been defined as a data property."), vm);
                 }
             }
             if (props && hasOwn(props, key)) {
                 process.env.NODE_ENV !== 'production' &&
-                    warn("The data property \"".concat(key, "\" is already declared as a prop. ") +
+                    warn$1("The data property \"".concat(key, "\" is already declared as a prop. ") +
                         "Use prop default value instead.", vm);
             }
             else if (!isReserved(key)) {
@@ -5033,7 +5043,7 @@
             var userDef = computed[key];
             var getter = isFunction(userDef) ? userDef : userDef.get;
             if (process.env.NODE_ENV !== 'production' && getter == null) {
-                warn("Getter is missing for computed property \"".concat(key, "\"."), vm);
+                warn$1("Getter is missing for computed property \"".concat(key, "\"."), vm);
             }
             if (!isSSR) {
                 // create internal watcher for the computed property.
@@ -5047,13 +5057,13 @@
             }
             else if (process.env.NODE_ENV !== 'production') {
                 if (key in vm.$data) {
-                    warn("The computed property \"".concat(key, "\" is already defined in data."), vm);
+                    warn$1("The computed property \"".concat(key, "\" is already defined in data."), vm);
                 }
                 else if (vm.$options.props && key in vm.$options.props) {
-                    warn("The computed property \"".concat(key, "\" is already defined as a prop."), vm);
+                    warn$1("The computed property \"".concat(key, "\" is already defined as a prop."), vm);
                 }
                 else if (vm.$options.methods && key in vm.$options.methods) {
-                    warn("The computed property \"".concat(key, "\" is already defined as a method."), vm);
+                    warn$1("The computed property \"".concat(key, "\" is already defined as a method."), vm);
                 }
             }
         }
@@ -5076,7 +5086,7 @@
         }
         if (process.env.NODE_ENV !== 'production' && sharedPropertyDefinition.set === noop) {
             sharedPropertyDefinition.set = function () {
-                warn("Computed property \"".concat(key, "\" was assigned to but it has no setter."), this);
+                warn$1("Computed property \"".concat(key, "\" was assigned to but it has no setter."), this);
             };
         }
         Object.defineProperty(target, key, sharedPropertyDefinition);
@@ -5113,14 +5123,14 @@
         for (var key in methods) {
             if (process.env.NODE_ENV !== 'production') {
                 if (typeof methods[key] !== 'function') {
-                    warn("Method \"".concat(key, "\" has type \"").concat(typeof methods[key], "\" in the component definition. ") +
+                    warn$1("Method \"".concat(key, "\" has type \"").concat(typeof methods[key], "\" in the component definition. ") +
                         "Did you reference the function correctly?", vm);
                 }
                 if (props && hasOwn(props, key)) {
-                    warn("Method \"".concat(key, "\" has already been defined as a prop."), vm);
+                    warn$1("Method \"".concat(key, "\" has already been defined as a prop."), vm);
                 }
                 if (key in vm && isReserved(key)) {
-                    warn("Method \"".concat(key, "\" conflicts with an existing Vue instance method. ") +
+                    warn$1("Method \"".concat(key, "\" conflicts with an existing Vue instance method. ") +
                         "Avoid defining component methods that start with _ or $.");
                 }
             }
@@ -5164,11 +5174,11 @@
         };
         if (process.env.NODE_ENV !== 'production') {
             dataDef.set = function () {
-                warn('Avoid replacing instance root $data. ' +
+                warn$1('Avoid replacing instance root $data. ' +
                     'Use nested data properties instead.', this);
             };
             propsDef.set = function () {
-                warn("$props is readonly.", this);
+                warn$1("$props is readonly.", this);
             };
         }
         Object.defineProperty(Vue.prototype, '$data', dataDef);
@@ -5309,7 +5319,7 @@
 
     function Vue$1(options) {
         if (process.env.NODE_ENV !== 'production' && !(this instanceof Vue$1)) {
-            warn('Vue is a constructor and should be called with the `new` keyword');
+            warn$1('Vue is a constructor and should be called with the `new` keyword');
         }
         this._init(options);
     }
@@ -5596,7 +5606,7 @@
         configDef.get = function () { return config; };
         if (process.env.NODE_ENV !== 'production') {
             configDef.set = function () {
-                warn('Do not replace the Vue.config object, set individual fields instead.');
+                warn$1('Do not replace the Vue.config object, set individual fields instead.');
             };
         }
         Object.defineProperty(Vue, 'config', configDef);
@@ -5604,7 +5614,7 @@
         // NOTE: these are not considered part of the public API - avoid relying on
         // them unless you are aware of the risk.
         Vue.util = {
-            warn: warn,
+            warn: warn$1,
             extend: extend,
             mergeOptions: mergeOptions,
             defineReactive: defineReactive
@@ -5792,7 +5802,7 @@
     var unknownElementCache = Object.create(null);
     function isUnknownElement(tag) {
         /* istanbul ignore if */
-        if (!inBrowser) {
+        if (!inBrowser$1) {
             return true;
         }
         if (isReservedTag(tag)) {
@@ -5823,7 +5833,7 @@
         if (typeof el === 'string') {
             var selected = document.querySelector(el);
             if (!selected) {
-                process.env.NODE_ENV !== 'production' && warn('Cannot find element: ' + el);
+                process.env.NODE_ENV !== 'production' && warn$1('Cannot find element: ' + el);
                 return document.createElement('div');
             }
             return selected;
@@ -5961,7 +5971,7 @@
                 ref.value = value;
             }
             else if (process.env.NODE_ENV !== 'production') {
-                warn("Invalid template ref type: ".concat(typeof ref));
+                warn$1("Invalid template ref type: ".concat(typeof ref));
             }
         }
     }
@@ -6082,7 +6092,7 @@
                         creatingElmInVPre++;
                     }
                     if (isUnknownElement(vnode, creatingElmInVPre)) {
-                        warn('Unknown custom element: <' +
+                        warn$1('Unknown custom element: <' +
                             tag +
                             '> - did you ' +
                             'register the component correctly? For recursive components, ' +
@@ -6398,7 +6408,7 @@
                 var key = vnode.key;
                 if (isDef(key)) {
                     if (seenKeys[key]) {
-                        warn("Duplicate keys detected: '".concat(key, "'. This may cause an update error."), vnode.context);
+                        warn$1("Duplicate keys detected: '".concat(key, "'. This may cause an update error."), vnode.context);
                     }
                     else {
                         seenKeys[key] = true;
@@ -6643,7 +6653,7 @@
                                 return oldVnode;
                             }
                             else if (process.env.NODE_ENV !== 'production') {
-                                warn('The client-side rendered virtual DOM tree is not matching ' +
+                                warn$1('The client-side rendered virtual DOM tree is not matching ' +
                                     'server-rendered content. This is likely caused by incorrect ' +
                                     'HTML markup, for example nesting block-level elements inside ' +
                                     '<p>, or missing <tbody>. Bailing hydration and performing ' +
@@ -7394,7 +7404,7 @@
             leaveActiveClass: "".concat(name, "-leave-active")
         };
     });
-    var hasTransition = inBrowser && !isIE9;
+    var hasTransition = inBrowser$1 && !isIE9;
     var TRANSITION = 'transition';
     var ANIMATION = 'animation';
     // Transition property/event sniffing
@@ -7416,7 +7426,7 @@
         }
     }
     // binding to window is necessary to make hot reload work in IE in strict mode
-    var raf = inBrowser
+    var raf = inBrowser$1
         ? window.requestAnimationFrame
             ? window.requestAnimationFrame.bind(window)
             : setTimeout
@@ -7724,11 +7734,11 @@
     // only used in dev mode
     function checkDuration(val, name, vnode) {
         if (typeof val !== 'number') {
-            warn("<transition> explicit ".concat(name, " duration is not a valid number - ") +
+            warn$1("<transition> explicit ".concat(name, " duration is not a valid number - ") +
                 "got ".concat(JSON.stringify(val), "."), vnode.context);
         }
         else if (isNaN(val)) {
-            warn("<transition> explicit ".concat(name, " duration is NaN - ") +
+            warn$1("<transition> explicit ".concat(name, " duration is NaN - ") +
                 'the duration expression might be incorrect.', vnode.context);
         }
     }
@@ -7761,7 +7771,7 @@
             enter(vnode);
         }
     }
-    var transition = inBrowser
+    var transition = inBrowser$1
         ? {
             create: _enter,
             activate: _enter,
@@ -7868,7 +7878,7 @@
         var isMultiple = el.multiple;
         if (isMultiple && !Array.isArray(value)) {
             process.env.NODE_ENV !== 'production' &&
-                warn("<select multiple v-model=\"".concat(binding.expression, "\"> ") +
+                warn$1("<select multiple v-model=\"".concat(binding.expression, "\"> ") +
                     "expects an Array value for its binding, but got ".concat(Object.prototype.toString
                         .call(value)
                         .slice(8, -1)), vm);
@@ -8060,13 +8070,13 @@
             }
             // warn multiple elements
             if (process.env.NODE_ENV !== 'production' && children.length > 1) {
-                warn('<transition> can only be used on a single element. Use ' +
+                warn$1('<transition> can only be used on a single element. Use ' +
                     '<transition-group> for lists.', this.$parent);
             }
             var mode = this.mode;
             // warn invalid mode
             if (process.env.NODE_ENV !== 'production' && mode && mode !== 'in-out' && mode !== 'out-in') {
-                warn('invalid <transition> mode: ' + mode, this.$parent);
+                warn$1('invalid <transition> mode: ' + mode, this.$parent);
             }
             var rawChild = children[0];
             // if this is a component root node and the component's
@@ -8188,7 +8198,7 @@
                         var name_1 = opts
                             ? getComponentName(opts.Ctor.options) || opts.tag || ''
                             : c.tag;
-                        warn("<transition-group> children must be keyed: <".concat(name_1, ">"));
+                        warn$1("<transition-group> children must be keyed: <".concat(name_1, ">"));
                     }
                 }
             }
@@ -8317,15 +8327,15 @@
     extend(Vue$1.options.directives, platformDirectives);
     extend(Vue$1.options.components, platformComponents);
     // install platform patch function
-    Vue$1.prototype.__patch__ = inBrowser ? patch : noop;
+    Vue$1.prototype.__patch__ = inBrowser$1 ? patch : noop;
     // public mount method
     Vue$1.prototype.$mount = function (el, hydrating) {
-        el = el && inBrowser ? query(el) : undefined;
+        el = el && inBrowser$1 ? query(el) : undefined;
         return mountComponent(this, el, hydrating);
     };
     // devtools global hook
     /* istanbul ignore next */
-    if (inBrowser) {
+    if (inBrowser$1) {
         setTimeout(function () {
             if (config.devtools) {
                 if (devtools) {
@@ -8420,6 +8430,28 @@
     // eslint-disable-next-line @typescript-eslint/ban-types
     function composeExport(s0, s1) {
         return Object.assign(s0, s1);
+    }
+    var inBrowser = typeof window !== 'undefined';
+    function warn(condition, format) {
+        var args = [];
+        for (var _i = 2; _i < arguments.length; _i++) {
+            args[_i - 2] = arguments[_i];
+        }
+        if (format === undefined) {
+            throw new Error('`warning(condition, format, ...args)` requires a warning ' +
+                'message argument');
+        }
+        if (!condition) {
+            var argIndex_1 = 0;
+            var message = '[@lj-portal/antdv]: ' +
+                format.replace(/%s/g, function () {
+                    return args[argIndex_1++];
+                });
+            if (typeof console !== 'undefined') {
+                // eslint-disable-next-line no-console
+                console.error(message);
+            }
+        }
     }
 
     var resolveComponent = function (child, props) {
@@ -9297,6 +9329,32 @@
     }
 
     var lodash_kebabcase = kebabCase;
+
+    /**
+     * Runtime helper for SFC's CSS variable injection feature.
+     * @private
+     */
+    function useCssVarsCompatible(getter) {
+        if (!inBrowser)
+            return;
+        var instance = getCurrentInstance();
+        if (!instance) {
+            warn(false, "useCssVars is called without current active component instance.");
+            return;
+        }
+        watchPostEffect(function () {
+            var el = instance.proxy.$el;
+            // @ts-expect-error type does not export
+            var vars = getter(instance, instance._setupProxy);
+            if (el && el.nodeType === 1) {
+                var style = el.style;
+                for (var key in vars) {
+                    style.setProperty("--".concat(key), vars[key]);
+                }
+            }
+        });
+    }
+    var useCssVars = useCssVars$1 || useCssVarsCompatible;
 
     var Page = defineComponent({
         name: 'Page',
