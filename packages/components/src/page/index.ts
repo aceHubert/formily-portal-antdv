@@ -2,6 +2,7 @@ import kebabCase from 'lodash.kebabcase'
 import { defineComponent, provide } from 'vue-demi'
 import { createForm } from '@formily/core'
 import { FormProvider, h, useForm } from '@formily/vue'
+import { stylePrefix } from '../__builtins__/configs'
 import { parseStyleUnit } from '../__builtins__/shared'
 import { useCssVars } from '../__builtins__/sfc-helper'
 import { PageConsumerProps } from './consumer-props'
@@ -24,6 +25,7 @@ export const Page = defineComponent<PageProps>({
     themeVars: Object,
   },
   setup(props, { slots }) {
+    const prefixCls = `${stylePrefix}-page`
     const top = useForm()
 
     useCssVars(() => {
@@ -45,14 +47,18 @@ export const Page = defineComponent<PageProps>({
     return () => {
       const { component = 'div' } = props
       const renderContent = () => {
-        return h(component, {}, slots)
+        return h(component, { style: prefixCls }, slots)
       }
 
       if (top?.value) {
         return renderContent()
       } else {
         const form = createForm()
-        return h(FormProvider, { props: { form } }, renderContent())
+        return h(
+          FormProvider,
+          { props: { form } },
+          { default: () => renderContent() }
+        )
       }
     }
   },

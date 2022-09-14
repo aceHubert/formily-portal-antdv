@@ -2,6 +2,7 @@ import kebabCase from 'lodash.kebabcase';
 import { defineComponent, provide } from 'vue-demi';
 import { createForm } from '@formily/core';
 import { FormProvider, h, useForm } from '@formily/vue';
+import { stylePrefix } from '../__builtins__/configs';
 import { parseStyleUnit } from '../__builtins__/shared';
 import { useCssVars } from '../__builtins__/sfc-helper';
 import { PageConsumerProps } from './consumer-props';
@@ -15,6 +16,7 @@ export var Page = defineComponent({
     },
     setup: function (props, _a) {
         var slots = _a.slots;
+        var prefixCls = "".concat(stylePrefix, "-page");
         var top = useForm();
         useCssVars(function () {
             return props.themeVars
@@ -31,14 +33,14 @@ export var Page = defineComponent({
         return function () {
             var _a = props.component, component = _a === void 0 ? 'div' : _a;
             var renderContent = function () {
-                return h(component, {}, slots);
+                return h(component, { style: prefixCls }, slots);
             };
             if (top === null || top === void 0 ? void 0 : top.value) {
                 return renderContent();
             }
             else {
                 var form = createForm();
-                return h(FormProvider, { props: { form: form } }, renderContent());
+                return h(FormProvider, { props: { form: form } }, { default: function () { return renderContent(); } });
             }
         };
     },

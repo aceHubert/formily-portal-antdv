@@ -9365,6 +9365,7 @@
         },
         setup: function (props, _a) {
             var slots = _a.slots;
+            var prefixCls = "".concat(stylePrefix, "-page");
             var top = Formily.Vue.useForm();
             useCssVars(function () {
                 return props.themeVars
@@ -9381,14 +9382,14 @@
             return function () {
                 var _a = props.component, component = _a === void 0 ? 'div' : _a;
                 var renderContent = function () {
-                    return Formily.Vue.h(component, {}, slots);
+                    return Formily.Vue.h(component, { style: prefixCls }, slots);
                 };
                 if (top === null || top === void 0 ? void 0 : top.value) {
                     return renderContent();
                 }
                 else {
                     var form = Formily.Core.createForm();
-                    return Formily.Vue.h(Formily.Vue.FormProvider, { props: { form: form } }, renderContent());
+                    return Formily.Vue.h(Formily.Vue.FormProvider, { props: { form: form } }, { default: function () { return renderContent(); } });
                 }
             };
         },
