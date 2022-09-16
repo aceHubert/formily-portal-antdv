@@ -2,18 +2,17 @@ import { defineComponent, h } from 'vue-demi'
 import { stylePrefix } from '../__builtins__/configs'
 import { resolveComponent } from '../__builtins__/shared'
 
-// Types
-import type { Component } from 'vue-demi'
-
 export interface EntryItemProps {
   /**
    * icon, png|jpg 以img标签渲染
+   * @type any (string | slot | VNode)
    */
-  icon: string | Component
+  icon: any
   /**
    * text
+   * @type any (string | slot | VNode)
    */
-  text: string | Component
+  text: any
   /**
    * 打开链接
    */

@@ -5,6 +5,5 @@
     "paths": {
       "@lj-portal/*": ["packages/*"]
     },
-    "declaration": false
   }
 }

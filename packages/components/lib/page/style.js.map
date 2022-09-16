@@ -1,1 +1,0 @@
-{"version":3,"file":"style.js","sourceRoot":"lib/","sources":["page/style.ts"],"names":[],"mappings":";;AAAA,wBAAsB","sourcesContent":["import './style.less';\n"]}

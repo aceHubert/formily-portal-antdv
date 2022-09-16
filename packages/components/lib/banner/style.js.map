@@ -1,1 +1,0 @@
-{"version":3,"file":"style.js","sourceRoot":"lib/","sources":["banner/style.ts"],"names":[],"mappings":";;AAAA,mDAAiD;AACjD,wBAAsB","sourcesContent":["import 'ant-design-vue/lib/cascader/style/index';\nimport './style.less';\n"]}

@@ -8,22 +8,22 @@ import {
 import { usePage } from '../page/useApi'
 import { NavMenu } from './menu'
 
-// Types
-import type { Component } from 'vue-demi'
-
 export interface NavProps {
   /**
    * logo
+   * @type any (string | slot | VNode)
    */
-  logo?: string | Component
+  logo?: any
   /**
    * left container component, logo 会被忽略如果设置 left
+   * @type any (string | slot | VNode)
    */
-  left?: string | Component
+  left?: any
   /**
-   * right container component,
+   * right container component
+   * @type any (string | slot | VNode)
    */
-  right?: string | Component
+  right?: any
   /**
    * fixed to top
    */

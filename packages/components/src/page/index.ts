@@ -8,12 +8,19 @@ import { useCssVars } from '../__builtins__/sfc-helper'
 import { PageConsumerProps } from './consumer-props'
 import { PageInjectKey } from './useApi'
 
-// Types
-import type { Component } from 'vue-demi'
-
 export interface PageProps {
-  component?: string | Component
+  /**
+   * Page root component, default: div
+   * @type any (string | slot | VNode)
+   */
+  component?: any
+  /**
+   * container width, provide
+   */
   containerWidth?: string | number
+  /**
+   * css vars
+   */
   themeVars?: Record<string, string>
 }
 

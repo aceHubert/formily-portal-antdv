@@ -2,22 +2,21 @@ import { defineComponent, h } from 'vue-demi';
 import { stylePrefix } from '../__builtins__/configs';
 import { resolveComponent } from '../__builtins__/shared';
 
-// Types
-import type { Component } from 'vue-demi';
-
 export interface PageItemProps {
   /**
    * 标题
+   * @type any (string | slot | VNode)
    */
-  title?: string | Component;
+  title?: any;
   /**
    * 标题下划线样式
    */
   titleUnderline?: boolean;
   /**
    * 标题右侧内容或组件
+   * @type any (string | slot | VNode)
    */
-  titleRight?: string | Component;
+  titleRight?: any;
 }
 
 export const PageItem = defineComponent<PageItemProps>({

@@ -1,7 +1,7 @@
 import {
   getCurrentInstance,
   watchPostEffect,
-  useCssVars as useCssVarsV3,
+  // useCssVars as useCssVarsV3,
 } from 'vue-demi'
 import { inBrowser, warn } from '../shared/utils'
 
@@ -39,4 +39,4 @@ function useCssVarsCompatible(
   })
 }
 
-export const useCssVars = useCssVarsV3 || useCssVarsCompatible
+export const useCssVars = useCssVarsCompatible
