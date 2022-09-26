@@ -18,7 +18,6 @@
     "**/*/style.js"
   ],
   "scripts": {
-    "postinstall": "vue-demi-fix",
     "serve": "tsc --project tsconfig.build.json --module es2015 --outDir esm -watch",
     "build": "rimraf esm lib dist types && formily-tpl build"
   },

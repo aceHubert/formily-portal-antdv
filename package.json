@@ -65,7 +65,10 @@
     "vuepress-plugin-typescript": "^0.3.1"
   },
   "resolutions": {
-    "vue": "~2.6.14"
+    "vue": "~2.6.14",
+    "@formily/core": "2.2.4",
+    "@formily/vue": "2.2.4",
+    "@formily/validator": "2.2.4"
   },
   "config": {
     "ghooks": {
