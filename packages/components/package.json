@@ -29,6 +29,7 @@
     "@formily/reactive-vue": "^2.2.2",
     "@formily/shared": "^2.2.2",
     "@formily/vue": "^2.2.2",
+    "color-js": "^1.0.5",
     "lodash.kebabcase": "^4.1.1"
   },
   "devDependencies": {
