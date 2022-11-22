@@ -1,7 +1,14 @@
-import { defineComponent, h, ref, watch } from 'vue-demi'
+import { defineComponent, getCurrentInstance, h, computed } from 'vue-demi'
 import { Menu } from 'ant-design-vue'
+import { useField } from '@formily/vue'
+import { observer } from '@formily/reactive-vue'
 import { stylePrefix } from '../__builtins__/configs'
-import { navigateTo } from '../__builtins__/shared'
+import { navigateTo, createDataResource } from '../__builtins__/shared'
+import { usePage } from '../page/useApi'
+
+// Types
+import type { Field } from '@formily/core'
+import type { ScopedDataSource, RemoteDataSource } from '../__builtins__/shared'
 
 export interface MenuItem {
   key: string | number
@@ -11,107 +18,115 @@ export interface MenuItem {
   children?: Array<Omit<MenuItem, 'children'>>
 }
 
-export interface RemoteNavMenuDataSource {
-  url: string
-  mapper: Record<string, string>
-}
-
 export interface NavMenuProps {
-  dataSource: MenuItem[] | RemoteNavMenuDataSource
+  /**
+   * Menu 数据源
+   */
+  dataSource?: ScopedDataSource<MenuItem> | RemoteDataSource<MenuItem>
+  /**
+   * Menu 主题
+   */
   theme?: 'light' | 'dark'
-  router?: any
 }
 
-export const NavMenu = defineComponent<NavMenuProps>({
-  name: 'NavMenu',
-  emits: ['click'],
-  props: {
-    dataSource: { type: [Array, Object], required: true },
-    theme: String,
-    router: Object,
-  },
-  setup(props, { emit }) {
-    const prefixCls = `${stylePrefix}-nav-menu`
+export const NavMenu = observer(
+  defineComponent<NavMenuProps>({
+    name: 'NavMenu',
+    emits: ['change'],
+    props: {
+      dataSource: [Object, Array],
+      theme: String,
+    },
+    setup(props, { emit }) {
+      const instance = getCurrentInstance()
+      const fieldRef = useField<Field>()
+      const { scopedDataRequest, dataRequest } = usePage()
+      const prefixCls = `${stylePrefix}-nav-menu`
 
-    let flatMenus: Array<Omit<MenuItem, 'children'>> = []
-    const itemsRef = ref<MenuItem[]>([])
-
-    const createFlatMenu = (
-      menus: MenuItem[],
-      flatMenus: Array<Omit<MenuItem, 'children'>> = []
-    ) => {
-      menus.map(({ children, ...rest }) => {
-        flatMenus.push(rest)
-        children?.length && createFlatMenu(children, flatMenus)
+      const datas = createDataResource(props.dataSource || [], {
+        scopedDataRequest,
+        dataRequest,
       })
 
-      return flatMenus
-    }
+      datas.read()
 
-    watch(
-      () => props.dataSource,
-      (value) => {
-        if (Array.isArray(value)) {
-          itemsRef.value = value
-          flatMenus = createFlatMenu(value)
-        } else {
-          // TODO: request from remote
-        }
-      },
-      { immediate: true }
-    )
+      const createFlatMenu = (
+        menus: MenuItem[],
+        flatMenus: Array<Omit<MenuItem, 'children'>> = []
+      ) => {
+        menus.map(({ children, ...rest }) => {
+          flatMenus.push(rest)
+          children?.length && createFlatMenu(children, flatMenus)
+        })
 
-    return () => {
-      const items = itemsRef.value
-      const { theme = 'light' } = props
-
-      const renderMenuItem = function renderMenuItem(menu: MenuItem) {
-        return h(
-          Menu.Item,
-          {
-            key: menu.key,
-          },
-          [h('span', menu.text)]
-        )
+        return flatMenus
       }
 
-      return h(
-        Menu,
-        {
-          class: prefixCls,
-          props: {
-            theme,
-            mode: 'horizontal',
-          },
-          on: {
-            click: ({ key }: { key: string | number }) => {
-              const menu = flatMenus.find((menu) => menu.key === key)
-              menu?.linkUrl &&
-                navigateTo(menu.linkUrl, {
-                  replace: menu.replace,
-                  router: props.router,
-                })
-              emit('click', key)
+      const flatMenus = computed<Array<Omit<MenuItem, 'children'>>>(() => {
+        const { $result = [] } = datas
+        return createFlatMenu($result)
+      })
+
+      return () => {
+        const { $result = [], $loading, $error } = datas
+
+        if ($loading) return null
+
+        if ($error)
+          return h('div', { class: `${prefixCls}__error` }, $error.message)
+
+        const { theme = 'light' } = props
+
+        const renderMenuItem = function renderMenuItem(menu: MenuItem) {
+          return h(
+            Menu.Item,
+            {
+              key: menu.key,
+            },
+            [h('span', menu.text)]
+          )
+        }
+
+        return h(
+          Menu,
+          {
+            class: prefixCls,
+            props: {
+              theme,
+              mode: 'horizontal',
+              selectable: false,
+            },
+            on: {
+              click: ({ key }: { key: string | number }) => {
+                const menu = flatMenus.value.find((menu) => menu.key === key)
+                menu?.linkUrl &&
+                  navigateTo(menu.linkUrl, {
+                    replace: menu.replace,
+                    router: (instance.proxy as any).$router,
+                  })
+                emit('change', key)
+                fieldRef.value.setValue(key)
+              },
             },
           },
-        },
-        items.map((menu) =>
-          menu.children?.length
-            ? h(
-                Menu.SubMenu,
-                {
-                  key: menu.key,
-                },
-                [
-                  h('span', { slot: 'title' }, menu.text),
-                  menu.children.map((child) => renderMenuItem(child)),
-                ]
-              )
-            : [renderMenuItem(menu)]
+          $result.map((menu) =>
+            menu.children?.length
+              ? h(
+                  Menu.SubMenu,
+                  {
+                    key: menu.key,
+                  },
+                  [
+                    h('span', { slot: 'title' }, menu.text),
+                    menu.children.map((child) => renderMenuItem(child)),
+                  ]
+                )
+              : [renderMenuItem(menu)]
+          )
         )
-      )
-    }
-  },
-})
+      }
+    },
+  })
+)
 
 export default NavMenu

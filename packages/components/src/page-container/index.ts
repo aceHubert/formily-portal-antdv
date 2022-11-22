@@ -16,27 +16,28 @@ export const PageContainer = defineComponent<PageContainerProps>({
     width: { type: [String, Number] },
   },
   setup(props, { slots }) {
+    const { containerWidth } = usePage()
     const prefixCls = `${stylePrefix}-page-container`
 
-    return () => {
-      const { width } = props
-      const style: Record<string, any> = {}
-      if (width) {
-        width !== 'fullwidth' && (style.width = parseStyleUnit(width))
-      } else {
-        const { containerWidth } = usePage()
-        style.width = containerWidth
-      }
+    const style: Record<string, any> = {}
+    if (props.width) {
+      props.width !== 'fullwidth' && (style.width = parseStyleUnit(props.width))
+    } else {
+      style.width = containerWidth
+    }
 
-      return h(
+    return () =>
+      h(
         'div',
         {
-          class: [prefixCls, width === 'fullwidth' && `${prefixCls}-fullwidth`],
+          class: [
+            prefixCls,
+            props.width === 'fullwidth' && `${prefixCls}-fullwidth`,
+          ],
           style,
         },
         slots.default?.()
       )
-    }
   },
 })
 

@@ -1,36 +1,39 @@
 @nav-menu-prefix-cls: ~'@{lj-portal-prefix}-nav-menu';
-@nav-menu-color: #fff;
-@nav-menu-hover-color: darken(@nav-menu-color, 10%);
+@nav-menu-color: #000;
+@nav-menu-hover-color: lighten(@nav-menu-color, 10%);
+@nav-menu-dark-color: #fff;
+@nav-menu-hover-dark-color: darken(@nav-menu-dark-color, 10%);
 
 .@{nav-menu-prefix-cls}{
   position: relative;
 
   &.@{ant-prefix}-menu{
-    color: @nav-menu-color;
-    line-height: 48px;
+    line-height: inherit;
     background-color: transparent;
     border-bottom: none;
 
-    &:not(.@{ant-prefix}-menu-inline) .@{ant-prefix}-menu-submenu-open{
-      color: @nav-menu-hover-color;
+    .@{ant-prefix}-menu-item, .@{ant-prefix}-menu-submenu, .@{ant-prefix}-menu-submenu-title{
+      color: @nav-menu-color;
+
+      &:hover, &-active, &-selected{
+        color: @nav-menu-hover-color;
+      }
+    }
+  }
+  
+  &.@{ant-prefix}-menu-dark{
+    .@{ant-prefix}-menu-item, .@{ant-prefix}-menu-submenu, .@{ant-prefix}-menu-submenu-title{
+      color: @nav-menu-dark-color;
+
+      &:hover, &-active, &-selected{
+        color: @nav-menu-hover-dark-color;
+      }
     }
   }
 
-  .@{ant-prefix}-menu{
-    &-item{
-      border-bottom: none !important;
-
-       &:hover, &-active, &-selected{
-        color: @nav-menu-hover-color;
-      }
-    }
-
-    &-submenu {
-      border-bottom: none !important;
-
-      &-title:hover, &-active{
-        color: @nav-menu-hover-color;
-      }
-    }
+  &__error{
+    color: red;
+    text-align: center;
+    line-height: 48px;
   }
 }

@@ -1,4 +1,6 @@
 import { defineComponent, h } from 'vue-demi'
+import { useField } from '@formily/vue'
+import { observer } from '@formily/reactive-vue'
 import { stylePrefix } from '../__builtins__/configs'
 import {
   parseStyleUnit,
@@ -42,137 +44,146 @@ export interface NavProps {
   contentAlign: 'left' | 'right'
 }
 
-const Nav = defineComponent<NavProps>({
-  name: 'Navbar',
-  props: {
-    logo: [String, Object],
-    left: {},
-    right: {},
-    fixed: Boolean,
-    placeholder: Boolean,
-    height: [String, Number],
-    contentAlign: {
-      type: String,
-      validator: (value: string) => {
-        return ['left', 'right'].includes(value)
+const Nav = observer(
+  defineComponent<NavProps>({
+    name: 'Navbar',
+    props: {
+      logo: [String, Object],
+      left: {},
+      right: {},
+      fixed: Boolean,
+      placeholder: Boolean,
+      height: [String, Number],
+      contentAlign: {
+        type: String,
+        validator: (value: string) => {
+          return ['left', 'right'].includes(value)
+        },
       },
     },
-  },
-  setup(props, { slots }) {
-    const prefixCls = `${stylePrefix}-nav`
-    const { containerWidth } = usePage()
+    setup(props, { slots }) {
+      const fieldRef = useField()
+      const { containerWidth } = usePage()
+      const prefixCls = `${stylePrefix}-nav`
 
-    return () => {
-      const {
-        logo,
-        height,
-        left,
-        right,
-        placeholder = false,
-        fixed = false,
-        contentAlign = 'left',
-      } = props
-      const style: Record<string, any> = {}
-      const placeholderStyle: Record<string, any> = {}
-      if (height) {
-        style.height = parseStyleUnit(height)
-        placeholderStyle.height = parseStyleUnit(height)
-      }
-
-      const renderLeft = () => {
-        if (logo) {
-          return h(
-            'div',
-            {
-              class: [`${prefixCls}-content__left`],
-            },
-            [
-              typeof props.logo === 'string'
-                ? h('img', {
-                    class: `${prefixCls}-logo`,
-                    domProps: {
-                      src: props.logo,
-                      alt: 'logo',
-                    },
-                  })
-                : h(props.logo, {
-                    class: `${prefixCls}-logo`,
-                  }),
-            ]
-          )
-        } else if (left) {
-          return h(
-            'div',
-            {
-              class: [`${prefixCls}-content__left`],
-            },
-            [resolveComponent(left)]
-          )
+      return () => {
+        const {
+          logo,
+          height,
+          left,
+          right,
+          placeholder = false,
+          fixed = false,
+          contentAlign = 'left',
+        } = props
+        const style: Record<string, any> = {}
+        const placeholderStyle: Record<string, any> = {}
+        if (height) {
+          style.height = parseStyleUnit(height)
+          placeholderStyle.height = parseStyleUnit(height)
         }
 
-        return
-      }
-
-      const renderRight = () => {
-        if (right) {
-          return h(
-            'div',
-            {
-              class: [`${prefixCls}-content__right`],
-            },
-            [resolveComponent(right)]
-          )
-        }
-
-        return
-      }
-
-      return h(
-        'div',
-        {
-          class: [prefixCls, fixed ? `${prefixCls}--fixed` : ''],
-          style,
-        },
-        [
-          fixed &&
-            placeholder &&
-            h('div', { class: [`${prefixCls}__placeholder`] }),
-          h(
-            'div',
-            {
-              class: [`${prefixCls}__container`],
-            },
-            [
-              h(
-                'div',
-                {
-                  class: [`${prefixCls}-content`],
-                  style: {
-                    width: containerWidth,
-                  },
-                },
-                [
-                  renderLeft(),
+        const renderLeft = () => {
+          if (logo) {
+            return h(
+              'div',
+              {
+                class: [`${prefixCls}-content__left`],
+              },
+              [
+                typeof props.logo === 'string'
+                  ? h('img', {
+                      class: `${prefixCls}-logo`,
+                      domProps: {
+                        src: props.logo,
+                        alt: 'logo',
+                      },
+                    })
+                  : h(props.logo, {
+                      class: `${prefixCls}-logo`,
+                    }),
+                fieldRef.value.title &&
                   h(
-                    'div',
-                    {
-                      class: [
-                        `${prefixCls}-content__middle`,
-                        `${prefixCls}-content__middle--${contentAlign}`,
-                      ],
-                    },
-                    slots.default?.()
+                    'span',
+                    { class: `${prefixCls}-title` },
+                    fieldRef.value.title
                   ),
-                  renderRight(),
-                ]
-              ),
-            ]
-          ),
-        ]
-      )
-    }
-  },
-})
+              ]
+            )
+          } else if (left) {
+            return h(
+              'div',
+              {
+                class: [`${prefixCls}-content__left`],
+              },
+              [resolveComponent(left)]
+            )
+          }
+
+          return
+        }
+
+        const renderRight = () => {
+          if (right) {
+            return h(
+              'div',
+              {
+                class: [`${prefixCls}-content__right`],
+              },
+              [resolveComponent(right)]
+            )
+          }
+
+          return
+        }
+
+        return h(
+          'div',
+          {
+            class: [prefixCls, fixed ? `${prefixCls}--fixed` : ''],
+            style,
+          },
+          [
+            fixed &&
+              placeholder &&
+              h('div', { class: [`${prefixCls}__placeholder`] }),
+            h(
+              'div',
+              {
+                class: [`${prefixCls}__container`],
+              },
+              [
+                h(
+                  'div',
+                  {
+                    class: [`${prefixCls}-content`],
+                    style: {
+                      width: containerWidth,
+                    },
+                  },
+                  [
+                    renderLeft(),
+                    h(
+                      'div',
+                      {
+                        class: [
+                          `${prefixCls}-content__middle`,
+                          `${prefixCls}-content__middle--${contentAlign}`,
+                        ],
+                      },
+                      slots.default?.()
+                    ),
+                    renderRight(),
+                  ]
+                ),
+              ]
+            ),
+          ]
+        )
+      }
+    },
+  })
+)
 
 export const Navbar = composeExport(Nav, {
   Menu: NavMenu,

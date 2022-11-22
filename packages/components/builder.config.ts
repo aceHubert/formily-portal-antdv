@@ -6,5 +6,6 @@ export const BuilderConfig: IBuilderConfig = {
   targetLibEsDir: 'es',
   externals: {
     'ant-design-vue': 'Antd',
+    axios: 'Axios',
   },
 }
