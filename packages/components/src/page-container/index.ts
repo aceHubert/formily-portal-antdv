@@ -19,7 +19,9 @@ export const PageContainer = defineComponent<PageContainerProps>({
     const { containerWidth } = usePage()
     const prefixCls = `${stylePrefix}-page-container`
 
-    const style: Record<string, any> = {}
+    const style: Record<string, any> = {
+      minWidth: containerWidth,
+    }
     if (props.width) {
       props.width !== 'fullwidth' && (style.width = parseStyleUnit(props.width))
     } else {

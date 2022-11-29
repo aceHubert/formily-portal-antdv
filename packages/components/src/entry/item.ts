@@ -1,6 +1,6 @@
 import { defineComponent, h } from 'vue-demi'
 import { stylePrefix } from '../__builtins__/configs'
-import { resolveComponent } from '../__builtins__/shared'
+import { resolveComponent, parseStyleUnit } from '../__builtins__/shared'
 
 export interface EntryItemProps {
   /**
@@ -9,10 +9,26 @@ export interface EntryItemProps {
    */
   icon: any
   /**
+   * icon class prefix, 如果 icon 是 iconfont
+   */
+  iconPrefix: string
+  /**
+   * icon font-size
+   */
+  iconFontSize: number | string
+  /**
+   * icon box element style
+   */
+  iconStyle: string
+  /**
    * text
    * @type any (string | slot | VNode)
    */
   text: any
+  /**
+   * text box element style
+   */
+  textStyle: string
   /**
    * 打开链接
    */
@@ -20,7 +36,7 @@ export interface EntryItemProps {
   /**
    * 链接打开方式
    */
-  blank?: boolean
+  linkTarget?: '_self' | '_blank'
 }
 
 export type onClick = (item: EntryItemProps) => void
@@ -31,30 +47,50 @@ export const EntryItem = defineComponent<EntryItemProps>({
   emits: ['click'],
   props: {
     icon: {},
+    iconPrefix: String,
+    iconStyle: String,
+    iconFontSize: String,
     text: {},
+    textStyle: String,
     linkUrl: String,
-    blank: Boolean,
+    linkTarget: String,
   },
   setup(props, { attrs, emit }) {
     const prefixCls = `${stylePrefix}-entry-item`
 
     return () => {
-      const { icon, text, blank, linkUrl } = props
+      const {
+        icon,
+        iconPrefix = 'icon',
+        iconFontSize,
+        iconStyle,
+        text,
+        textStyle,
+        linkUrl,
+        linkTarget,
+      } = props
       const renderIcon = () => {
         return h(
           'div',
           {
             class: `${prefixCls}__icon`,
+            style: iconStyle,
           },
           [
-            typeof icon === 'string' &&
-            /(http(s?):)([/|.|\w|\s|-])*\.(?:jpg|png)/g.test(icon)
-              ? h('img', {
-                  domProps: {
-                    src: icon,
-                    alt: typeof text === 'string' ? text : icon,
-                  },
-                })
+            typeof icon === 'string'
+              ? /(http(s?):)([/|.|\w|\s|-])*\.(?:jpg|png)/g.test(icon)
+                ? h('img', {
+                    domProps: {
+                      src: icon,
+                      alt: typeof text === 'string' ? text : icon,
+                    },
+                  })
+                : h('i', {
+                    style: iconFontSize
+                      ? `font-size: ${parseStyleUnit(iconFontSize)}`
+                      : '',
+                    class: ['icon', `${iconPrefix}-${icon}`],
+                  })
               : resolveComponent(icon),
           ]
         )
@@ -65,6 +101,7 @@ export const EntryItem = defineComponent<EntryItemProps>({
           'p',
           {
             class: `${prefixCls}__text`,
+            style: textStyle,
           },
           [resolveComponent(text)]
         )
@@ -76,7 +113,7 @@ export const EntryItem = defineComponent<EntryItemProps>({
           class: prefixCls,
           domProps: {
             href: linkUrl || 'javascript:;',
-            target: blank ? '_blank' : '_self',
+            target: linkTarget || '_self',
           },
           on: {
             click: () => {

@@ -1,6 +1,6 @@
 import { defineComponent, h } from 'vue-demi'
-import { useField } from '@formily/vue'
 import { observer } from '@formily/reactive-vue'
+import { useField } from '@formily/vue'
 import { Carousel } from 'ant-design-vue'
 import { stylePrefix } from '../__builtins__/configs'
 import { parseStyleUnit, createDataResource } from '../__builtins__/shared'
@@ -48,7 +48,7 @@ export const Banner = observer(
   defineComponent<BannerProps>({
     name: 'Banner',
     inheritAttrs: false,
-    emit: ['change'],
+    emit: ['change', 'itemClick'],
     props: {
       dataSource: [Object, Array],
       defaultKey: [String, Number],
@@ -92,13 +92,17 @@ export const Banner = observer(
           if (height) {
             return $result.map((item) =>
               h('a', {
-                class: [`${prefixCls}__item`, props.itemClassName],
+                class: [
+                  `${prefixCls}__item`,
+                  `${prefixCls}__item--bg`,
+                  props.itemClassName,
+                ],
                 style: {
                   backgroundImage: `url(${item.imageUrl})`,
                   height: parseStyleUnit(height),
                 },
                 domProps: {
-                  target: item.linkTarget || '_blank',
+                  target: item.linkTarget || '_self',
                   href: item.linkUrl || 'javascript:;',
                 },
                 on: {
@@ -116,7 +120,7 @@ export const Banner = observer(
                 {
                   class: [`${prefixCls}__item`, props.itemClassName],
                   domProps: {
-                    target: item.linkTarget || '_blank',
+                    target: item.linkTarget || '_self',
                     href: item.linkUrl || 'javascript:;',
                   },
                   on: {
