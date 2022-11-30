@@ -1,9 +1,13 @@
-import { defineComponent, h } from 'vue-demi'
+import { defineComponent, h, watch } from 'vue-demi'
 import { useField } from '@formily/vue'
 import { observer } from '@formily/reactive-vue'
 import { Carousel } from 'ant-design-vue'
 import { stylePrefix } from '../__builtins__/configs'
-import { composeExport, createDataResource } from '../__builtins__/shared'
+import {
+  composeExport,
+  createDataResource,
+  equals,
+} from '../__builtins__/shared'
 import { usePage } from '../page/useApi'
 import { EntryItem } from './item'
 
@@ -49,12 +53,21 @@ const EntryContainer = observer(
       const { scopedDataRequest, dataRequest } = usePage()
       const prefixCls = `${stylePrefix}-entry`
 
-      const datas = createDataResource(props.dataSource || [], {
+      const datas = createDataResource<EntryItemProps>({
         scopedDataRequest,
         dataRequest,
       })
 
-      datas.read()
+      watch(
+        () => props.dataSource,
+        (value, old) => {
+          !equals(value, old) &&
+            datas.read({
+              dataSource: value || [],
+            })
+        },
+        { immediate: true, deep: true }
+      )
 
       return () => {
         const { $result = [], $loading, $error } = datas

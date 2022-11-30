@@ -1,9 +1,15 @@
-import { defineComponent, getCurrentInstance, h, computed } from 'vue-demi'
+import {
+  defineComponent,
+  getCurrentInstance,
+  h,
+  computed,
+  watch,
+} from 'vue-demi'
 import { Menu } from 'ant-design-vue'
 import { useField } from '@formily/vue'
 import { observer } from '@formily/reactive-vue'
 import { stylePrefix } from '../__builtins__/configs'
-import { navigateTo, createDataResource } from '../__builtins__/shared'
+import { navigateTo, createDataResource, equals } from '../__builtins__/shared'
 import { usePage } from '../page/useApi'
 
 // Types
@@ -43,12 +49,21 @@ export const NavMenu = observer(
       const { scopedDataRequest, dataRequest } = usePage()
       const prefixCls = `${stylePrefix}-nav-menu`
 
-      const datas = createDataResource(props.dataSource || [], {
+      const datas = createDataResource<MenuItem>({
         scopedDataRequest,
         dataRequest,
       })
 
-      datas.read()
+      watch(
+        () => props.dataSource,
+        (value, old) => {
+          !equals(value, old) &&
+            datas.read({
+              dataSource: value || [],
+            })
+        },
+        { immediate: true, deep: true }
+      )
 
       const createFlatMenu = (
         menus: MenuItem[],
