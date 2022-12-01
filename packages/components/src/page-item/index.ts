@@ -1,10 +1,11 @@
 import { defineComponent, h } from 'vue-demi'
+import { useField } from '@formily/vue'
 import { stylePrefix } from '../__builtins__/configs'
 import { resolveComponent } from '../__builtins__/shared'
 
 export interface PageItemProps {
   /**
-   * 标题
+   * 标题，默认值：field.title
    * @type any (string | slot | VNode)
    */
   title?: any
@@ -27,10 +28,11 @@ export const PageItem = defineComponent<PageItemProps>({
     titleUnderline: Boolean,
   },
   setup(props, { slots }) {
+    const fieldRef = useField()
     const prefixCls = `${stylePrefix}-page-item`
 
     const renderTitle = () => {
-      const { title, titleUnderline, titleRight } = props
+      const { title = fieldRef.value.title, titleUnderline, titleRight } = props
       if (title) {
         return h(
           'div',
@@ -48,7 +50,7 @@ export const PageItem = defineComponent<PageItemProps>({
               {
                 class: `${prefixCls}-title__text`,
               },
-              resolveComponent(title)
+              resolveComponent(title || fieldRef.value.title)
             ),
             titleRight &&
               h(
