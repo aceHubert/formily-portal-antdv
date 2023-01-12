@@ -1,7 +1,6 @@
 import { defineComponent, h } from 'vue-demi'
 import { useField } from '@formily/vue'
-import { stylePrefix } from '../__builtins__/configs'
-import { resolveComponent } from '../__builtins__/shared'
+import { resolveComponent, usePrefixCls } from '../__builtins__'
 
 export interface PageItemProps {
   /**
@@ -27,9 +26,12 @@ export const PageItem = defineComponent<PageItemProps>({
     titleRight: {},
     titleUnderline: Boolean,
   },
-  setup(props, { slots }) {
+  setup(props, { attrs, slots }) {
     const fieldRef = useField()
-    const prefixCls = `${stylePrefix}-page-item`
+    const prefixCls = usePrefixCls(
+      'protal-page-item',
+      attrs.prefixCls as string
+    )
 
     const renderTitle = () => {
       const { title = fieldRef.value.title, titleUnderline, titleRight } = props

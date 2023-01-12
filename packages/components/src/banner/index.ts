@@ -2,12 +2,12 @@ import { defineComponent, h, watch } from 'vue-demi'
 import { observer } from '@formily/reactive-vue'
 import { useField } from '@formily/vue'
 import { Carousel } from 'ant-design-vue'
-import { stylePrefix } from '../__builtins__/configs'
 import {
   parseStyleUnit,
   createDataResource,
   equals,
-} from '../__builtins__/shared'
+  usePrefixCls,
+} from '../__builtins__'
 import { usePage } from '../page/useApi'
 
 // Types
@@ -63,7 +63,7 @@ export const Banner = observer(
     setup(props, { attrs, emit }) {
       const fieldRef = useField<Field>()
       const { scopedDataRequest, dataRequest } = usePage()
-      const prefixCls = `${stylePrefix}-banner`
+      const prefixCls = usePrefixCls('portal-banner', attrs.prefixCls as string)
 
       const datas = createDataResource<BannerItem>({
         scopedDataRequest,

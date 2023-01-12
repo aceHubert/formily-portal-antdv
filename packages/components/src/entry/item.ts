@@ -1,6 +1,5 @@
 import { defineComponent, h } from 'vue-demi'
-import { stylePrefix } from '../__builtins__/configs'
-import { resolveComponent, parseStyleUnit } from '../__builtins__/shared'
+import { resolveComponent, parseStyleUnit, usePrefixCls } from '../__builtins__'
 
 export interface EntryItemProps {
   /**
@@ -56,7 +55,10 @@ export const EntryItem = defineComponent<EntryItemProps>({
     linkTarget: String,
   },
   setup(props, { attrs, emit }) {
-    const prefixCls = `${stylePrefix}-entry-item`
+    const prefixCls = usePrefixCls(
+      'portal-entry-item',
+      attrs.prefixCls as string
+    )
 
     return () => {
       const {

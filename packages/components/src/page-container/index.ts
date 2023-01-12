@@ -1,6 +1,5 @@
 import { defineComponent, h } from 'vue-demi'
-import { stylePrefix } from '../__builtins__/configs'
-import { parseStyleUnit } from '../__builtins__/shared'
+import { parseStyleUnit, usePrefixCls } from '../__builtins__'
 import { usePage } from '../page/useApi'
 
 export interface PageContainerProps {
@@ -15,9 +14,12 @@ export const PageContainer = defineComponent<PageContainerProps>({
   props: {
     width: { type: [String, Number] },
   },
-  setup(props, { slots }) {
+  setup(props, { attrs, slots }) {
     const { containerWidth } = usePage()
-    const prefixCls = `${stylePrefix}-page-container`
+    const prefixCls = usePrefixCls(
+      'protal-page-container',
+      attrs.prefixCls as string
+    )
 
     const style: Record<string, any> = {
       minWidth: containerWidth,

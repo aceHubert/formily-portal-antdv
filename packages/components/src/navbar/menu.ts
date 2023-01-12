@@ -8,8 +8,12 @@ import {
 import { Menu } from 'ant-design-vue'
 import { useField } from '@formily/vue'
 import { observer } from '@formily/reactive-vue'
-import { stylePrefix } from '../__builtins__/configs'
-import { navigateTo, createDataResource, equals } from '../__builtins__/shared'
+import {
+  navigateTo,
+  createDataResource,
+  equals,
+  usePrefixCls,
+} from '../__builtins__'
 import { usePage } from '../page/useApi'
 
 // Types
@@ -43,11 +47,14 @@ export const NavMenu = observer(
       dataSource: [Object, Array],
       theme: String,
     },
-    setup(props, { emit }) {
+    setup(props, { attrs, emit }) {
       const instance = getCurrentInstance()
       const fieldRef = useField<Field>()
       const { scopedDataRequest, dataRequest } = usePage()
-      const prefixCls = `${stylePrefix}-nav-menu`
+      const prefixCls = usePrefixCls(
+        'protal-nav-menu',
+        attrs.prefixCls as string
+      )
 
       const datas = createDataResource<MenuItem>({
         scopedDataRequest,

@@ -10,8 +10,7 @@ import {
 } from 'vue-demi'
 import { createForm } from '@formily/core'
 import { FormProvider, h, useForm } from '@formily/vue'
-import { stylePrefix } from '../__builtins__/configs'
-import { parseStyleUnit } from '../__builtins__/shared'
+import { parseStyleUnit, usePrefixCls } from '../__builtins__'
 import { PageConsumerProps } from './consumer-props'
 import { PageInjectKey } from './useApi'
 
@@ -59,8 +58,8 @@ export const Page = defineComponent<PageProps>({
     scopedDataRequest: [String, Function],
     dataRequest: Function,
   },
-  setup(props, { slots }) {
-    const prefixCls = `${stylePrefix}-page`
+  setup(props, { attrs, slots }) {
+    const prefixCls = usePrefixCls('protal-page', attrs.prefixCls as string)
     const top = useForm()
 
     const genColor = (color: string) => {

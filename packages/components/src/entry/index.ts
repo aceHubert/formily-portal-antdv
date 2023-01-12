@@ -1,12 +1,12 @@
 import { defineComponent, h, watch } from 'vue-demi'
 import { useField } from '@formily/vue'
 import { observer } from '@formily/reactive-vue'
-import { stylePrefix } from '../__builtins__/configs'
 import {
   composeExport,
   createDataResource,
   equals,
-} from '../__builtins__/shared'
+  usePrefixCls,
+} from '../__builtins__'
 import { usePage } from '../page/useApi'
 import { EntryItem } from './item'
 
@@ -44,7 +44,7 @@ const EntryContainer = observer(
     setup(props, { attrs, emit }) {
       const fieldRef = useField<Field>()
       const { scopedDataRequest, dataRequest } = usePage()
-      const prefixCls = `${stylePrefix}-entry`
+      const prefixCls = usePrefixCls('portal-entry', attrs.prefixCls as string)
 
       const datas = createDataResource<EntryItemProps>({
         scopedDataRequest,

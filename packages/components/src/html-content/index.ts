@@ -1,11 +1,11 @@
-import { defineComponent, h } from 'vue-demi';
-import { stylePrefix } from '../__builtins__/configs';
+import { defineComponent, h } from 'vue-demi'
+import { usePrefixCls } from '../__builtins__'
 
 export interface HtmlProps {
   /**
    * innerHTML content
    */
-  content?: string;
+  content?: string
 }
 
 export const HtmlContent = defineComponent<HtmlProps>({
@@ -13,20 +13,20 @@ export const HtmlContent = defineComponent<HtmlProps>({
   props: {
     content: String,
   },
-  setup(props, { slots }) {
-    const prefixCls = `${stylePrefix}-html`;
+  setup(props, { attrs, slots }) {
+    const prefixCls = usePrefixCls('protal-html', attrs.prefixCls as string)
 
     return () => {
       const content =
         props.content ||
         (() => {
           // child is a string
-          const def = slots.default?.();
+          const def = slots.default?.()
           if (typeof def === 'string') {
-            return def;
+            return def
           }
-          return '';
-        })();
+          return ''
+        })()
 
       return h(
         'div',
@@ -36,10 +36,10 @@ export const HtmlContent = defineComponent<HtmlProps>({
             innerHTML: content,
           },
         },
-        [],
-      );
-    };
+        []
+      )
+    }
   },
-});
+})
 
-export default HtmlContent;
+export default HtmlContent

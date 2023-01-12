@@ -1,12 +1,12 @@
 import { defineComponent, h } from 'vue-demi'
 import { useField } from '@formily/vue'
 import { observer } from '@formily/reactive-vue'
-import { stylePrefix } from '../__builtins__/configs'
 import {
   parseStyleUnit,
   resolveComponent,
   composeExport,
-} from '../__builtins__/shared'
+  usePrefixCls,
+} from '../__builtins__'
 import { usePage } from '../page/useApi'
 import { NavMenu } from './menu'
 
@@ -61,10 +61,10 @@ const Nav = observer(
         },
       },
     },
-    setup(props, { slots }) {
+    setup(props, { attrs, slots }) {
       const fieldRef = useField()
       const { containerWidth } = usePage()
-      const prefixCls = `${stylePrefix}-nav`
+      const prefixCls = usePrefixCls('protal-nav', attrs.prefixCls as string)
 
       return () => {
         const {
