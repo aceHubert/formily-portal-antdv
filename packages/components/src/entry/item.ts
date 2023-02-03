@@ -1,20 +1,25 @@
-import { defineComponent, h } from 'vue-demi'
+import { defineComponent } from 'vue-demi'
+import { h } from '@formily/vue'
 import { resolveComponent, parseStyleUnit, usePrefixCls } from '../__builtins__'
 
 export interface EntryItemProps {
   /**
-   * icon, png|jpg 以img标签渲染
+   * icon
    * @type any (string | slot | VNode)
    */
   icon: any
   /**
-   * icon class prefix, 如果 icon 是 iconfont
+   * icon class prefix (如果 icon 是 iconfont)
    */
   iconPrefix: string
   /**
    * icon font-size
    */
   iconFontSize: number | string
+  /**
+   * icon img height/width
+   */
+  iconImgSize: number | string
   /**
    * icon box element style
    */
@@ -48,7 +53,8 @@ export const EntryItem = defineComponent<EntryItemProps>({
     icon: {},
     iconPrefix: String,
     iconStyle: String,
-    iconFontSize: String,
+    iconFontSize: [String, Number],
+    iconImgSize: [String, Number],
     text: {},
     textStyle: String,
     linkUrl: String,
@@ -65,6 +71,7 @@ export const EntryItem = defineComponent<EntryItemProps>({
         icon,
         iconPrefix = 'icon',
         iconFontSize,
+        iconImgSize,
         iconStyle,
         text,
         textStyle,
@@ -78,23 +85,41 @@ export const EntryItem = defineComponent<EntryItemProps>({
             class: `${prefixCls}__icon`,
             style: iconStyle,
           },
-          [
-            typeof icon === 'string'
-              ? /(http(s?):)([/|.|\w|\s|-])*\.(?:jpg|png)/g.test(icon)
-                ? h('img', {
-                    domProps: {
-                      src: icon,
-                      alt: typeof text === 'string' ? text : icon,
-                    },
-                  })
-                : h('i', {
-                    style: iconFontSize
-                      ? `font-size: ${parseStyleUnit(iconFontSize)}`
-                      : '',
-                    class: ['icon', `${iconPrefix}-${icon}`],
-                  })
-              : resolveComponent(icon),
-          ]
+          {
+            default: () => [
+              typeof icon === 'string'
+                ? /(http(s?):)?\/\/([/|.|?|=|\w|\s|-])*/gi.test(icon)
+                  ? h(
+                      'img',
+                      {
+                        style:
+                          iconImgSize && iconImgSize !== 'inherit'
+                            ? {
+                                height: parseStyleUnit(iconImgSize),
+                                width: parseStyleUnit(iconImgSize),
+                              }
+                            : {},
+                        domProps: {
+                          src: icon,
+                          alt: typeof text === 'string' ? text : icon,
+                        },
+                      },
+                      {}
+                    )
+                  : h(
+                      'i',
+                      {
+                        style:
+                          iconFontSize && iconFontSize !== 'inherit'
+                            ? { fontSize: parseStyleUnit(iconFontSize) }
+                            : {},
+                        class: ['icon', `${iconPrefix}-${icon}`],
+                      },
+                      {}
+                    )
+                : resolveComponent(icon),
+            ],
+          }
         )
       }
 
@@ -105,7 +130,7 @@ export const EntryItem = defineComponent<EntryItemProps>({
             class: `${prefixCls}__text`,
             style: textStyle,
           },
-          [resolveComponent(text)]
+          { default: () => [resolveComponent(text)] }
         )
       }
 
@@ -124,7 +149,7 @@ export const EntryItem = defineComponent<EntryItemProps>({
             },
           },
         },
-        [renderIcon(), renderText()]
+        { default: () => [renderIcon(), renderText()] }
       )
     }
   },

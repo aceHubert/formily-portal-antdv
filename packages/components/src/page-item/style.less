@@ -1,6 +1,6 @@
 @import '../__builtins__/styles/common.less';
 
-@page-item-prefix-cls: ~'@{ant-prefix}-protal-page-item';
+@page-item-prefix-cls: ~'@{ant-portal-prefix}-page-item';
 @page-item-title-underline-color: @border-color-split;
 @page-item-title-font-size: @font-size-lg;
 @page-item-title-line-height: 30px;
@@ -10,6 +10,7 @@
   position: relative;
 
   &__title{
+    padding: 10px 0;
     display: flex;
     justify-content: space-between;
     vertical-align: middle;
@@ -19,7 +20,7 @@
     }
   }
 
-  &-title{  
+  &-title{    
     &__text{
       margin-bottom: 0;
       padding: 0 10px;
@@ -41,9 +42,19 @@
         bottom: (@page-item-title-line-height - @page-item-title-font-size)/2;
       }
     }
+
+    &__right{
+      padding: 0 10px;
+      line-height: @page-item-title-line-height;
+
+      & > a{
+        text-decoration: none;
+      }
+    }
   }
 
   &__content{
     position: relative;
+    padding-top: 10px;
   }
 }

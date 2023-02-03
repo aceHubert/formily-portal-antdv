@@ -1,5 +1,5 @@
-import { defineComponent, h, watch } from 'vue-demi'
-import { useField } from '@formily/vue'
+import { defineComponent, watch } from 'vue-demi'
+import { useField, h } from '@formily/vue'
 import { observer } from '@formily/reactive-vue'
 import {
   composeExport,
@@ -7,7 +7,7 @@ import {
   equals,
   usePrefixCls,
 } from '../__builtins__'
-import { usePage } from '../page/useApi'
+import { usePageLayout } from '../page-layout'
 import { EntryItem } from './item'
 
 // Types
@@ -43,20 +43,20 @@ const EntryContainer = observer(
     },
     setup(props, { attrs, emit }) {
       const fieldRef = useField<Field>()
-      const { scopedDataRequest, dataRequest } = usePage()
+      const pageLayoutRef = usePageLayout()
       const prefixCls = usePrefixCls('portal-entry', attrs.prefixCls as string)
 
       const datas = createDataResource<EntryItemProps>({
-        scopedDataRequest,
-        dataRequest,
+        scopedDataRequest: pageLayoutRef.value.scopedDataRequest,
+        dataRequest: pageLayoutRef.value.dataRequest,
       })
 
       watch(
         () => props.dataSource,
         (value, old) => {
-          !equals(value, old) &&
+          ;(!datas.$loaded || !equals(value, old)) &&
             datas.read({
-              dataSource: value || [],
+              dataSource: value || (fieldRef.value.dataSource as any),
             })
         },
         { immediate: true, deep: true }
@@ -68,7 +68,11 @@ const EntryContainer = observer(
         if ($loading) return null
 
         if ($error)
-          return h('div', { class: `${prefixCls}__error` }, $error.message)
+          return h(
+            'div',
+            { class: `${prefixCls}__error` },
+            { default: () => [$error.message] }
+          )
 
         const { columns = 4 } = props
 
@@ -81,22 +85,29 @@ const EntryContainer = observer(
           {
             class: [prefixCls, { [`${prefixCls}--mulit-lines`]: rows > 1 }], // 大于1行时左对齐，否则平铺
           },
-          $result.map((itemProps) =>
-            h(EntryItem, {
-              style: {
-                flexBasis: `${100 / cols}%`,
-              },
-              props: Object.assign({}, props.itemProps, itemProps),
-              on: {
-                click: () => {
-                  const plain = JSON.parse(JSON.stringify(itemProps))
-                  ;(attrs.onItemClick as onClick)?.(plain)
-                  emit('itemClick', plain)
-                  fieldRef.value.setValue?.(plain)
-                },
-              },
-            })
-          )
+          {
+            default: () =>
+              $result.map((itemProps) =>
+                h(
+                  EntryItem,
+                  {
+                    style: {
+                      flexBasis: `${100 / cols}%`,
+                    },
+                    props: Object.assign({}, props.itemProps, itemProps),
+                    on: {
+                      click: () => {
+                        const plain = JSON.parse(JSON.stringify(itemProps))
+                        ;(attrs.onItemClick as onClick)?.(plain)
+                        emit('itemClick', plain)
+                        fieldRef.value.setValue?.(plain)
+                      },
+                    },
+                  },
+                  {}
+                )
+              ),
+          }
         )
       }
     },

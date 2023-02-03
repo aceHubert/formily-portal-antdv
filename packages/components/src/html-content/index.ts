@@ -1,4 +1,5 @@
-import { defineComponent, h } from 'vue-demi'
+import { defineComponent } from 'vue-demi'
+import { h } from '@formily/vue'
 import { usePrefixCls } from '../__builtins__'
 
 export interface HtmlProps {
@@ -14,7 +15,7 @@ export const HtmlContent = defineComponent<HtmlProps>({
     content: String,
   },
   setup(props, { attrs, slots }) {
-    const prefixCls = usePrefixCls('protal-html', attrs.prefixCls as string)
+    const prefixCls = usePrefixCls('portal-html', attrs.prefixCls as string)
 
     return () => {
       const content =
@@ -36,7 +37,7 @@ export const HtmlContent = defineComponent<HtmlProps>({
             innerHTML: content,
           },
         },
-        []
+        {}
       )
     }
   },

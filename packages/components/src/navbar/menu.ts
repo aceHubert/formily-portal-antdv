@@ -1,12 +1,6 @@
-import {
-  defineComponent,
-  getCurrentInstance,
-  h,
-  computed,
-  watch,
-} from 'vue-demi'
+import { defineComponent, getCurrentInstance, computed, watch } from 'vue-demi'
 import { Menu } from 'ant-design-vue'
-import { useField } from '@formily/vue'
+import { useField, h } from '@formily/vue'
 import { observer } from '@formily/reactive-vue'
 import {
   navigateTo,
@@ -14,7 +8,7 @@ import {
   equals,
   usePrefixCls,
 } from '../__builtins__'
-import { usePage } from '../page/useApi'
+import { usePageLayout } from '../page-layout'
 
 // Types
 import type { Field } from '@formily/core'
@@ -50,23 +44,23 @@ export const NavMenu = observer(
     setup(props, { attrs, emit }) {
       const instance = getCurrentInstance()
       const fieldRef = useField<Field>()
-      const { scopedDataRequest, dataRequest } = usePage()
+      const pageLayoutRef = usePageLayout()
       const prefixCls = usePrefixCls(
-        'protal-nav-menu',
+        'portal-nav-menu',
         attrs.prefixCls as string
       )
 
       const datas = createDataResource<MenuItem>({
-        scopedDataRequest,
-        dataRequest,
+        scopedDataRequest: pageLayoutRef.value.scopedDataRequest,
+        dataRequest: pageLayoutRef.value.dataRequest,
       })
 
       watch(
         () => props.dataSource,
         (value, old) => {
-          !equals(value, old) &&
+          ;(!datas.$loaded || !equals(value, old)) &&
             datas.read({
-              dataSource: value || [],
+              dataSource: value || (fieldRef.value.dataSource as any),
             })
         },
         { immediate: true, deep: true }
@@ -95,7 +89,11 @@ export const NavMenu = observer(
         if ($loading) return null
 
         if ($error)
-          return h('div', { class: `${prefixCls}__error` }, $error.message)
+          return h(
+            'div',
+            { class: `${prefixCls}__error` },
+            { default: () => [$error.message] }
+          )
 
         const { theme = 'light' } = props
 
@@ -105,46 +103,66 @@ export const NavMenu = observer(
             {
               key: menu.key,
             },
-            [h('span', menu.text)]
+            { default: () => [h('span', {}, { default: () => [menu.text] })] }
           )
         }
 
         return h(
-          Menu,
+          'div',
+          { class: prefixCls },
           {
-            class: prefixCls,
-            props: {
-              theme,
-              mode: 'horizontal',
-              selectable: false,
-            },
-            on: {
-              click: ({ key }: { key: string | number }) => {
-                const menu = flatMenus.value.find((menu) => menu.key === key)
-                menu?.linkUrl &&
-                  navigateTo(menu.linkUrl, {
-                    replace: menu.replace,
-                    router: (instance.proxy as any).$router,
-                  })
-                emit('change', key)
-                fieldRef.value.setValue(key)
-              },
-            },
-          },
-          $result.map((menu) =>
-            menu.children?.length
-              ? h(
-                  Menu.SubMenu,
-                  {
-                    key: menu.key,
+            default: () => [
+              h(
+                Menu,
+                {
+                  props: {
+                    theme,
+                    mode: 'horizontal',
+                    selectable: false,
                   },
-                  [
-                    h('span', { slot: 'title' }, menu.text),
-                    menu.children.map((child) => renderMenuItem(child)),
-                  ]
-                )
-              : [renderMenuItem(menu)]
-          )
+                  on: {
+                    click: ({ key }: { key: string | number }) => {
+                      const menu = flatMenus.value.find(
+                        (menu) => menu.key === key
+                      )
+                      menu?.linkUrl &&
+                        navigateTo(menu.linkUrl, {
+                          replace: menu.replace,
+                          router: (instance.proxy as any).$router,
+                        })
+                      emit('change', key)
+                      fieldRef.value.setValue(key)
+                    },
+                  },
+                },
+                {
+                  default: () =>
+                    $result.map((menu) =>
+                      menu.children?.length
+                        ? h(
+                            Menu.SubMenu,
+                            {
+                              key: menu.key,
+                            },
+                            {
+                              default: () => [
+                                h(
+                                  'span',
+                                  { slot: 'title' },
+                                  { default: () => [menu.text] }
+                                ),
+                                menu.children.map((child) =>
+                                  renderMenuItem(child)
+                                ),
+                              ],
+                            }
+                          )
+                        : [renderMenuItem(menu)]
+                    ),
+                }
+              ),
+            ],
+          }
         )
       }
     },

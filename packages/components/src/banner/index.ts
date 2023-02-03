@@ -1,6 +1,6 @@
-import { defineComponent, h, watch } from 'vue-demi'
+import { defineComponent, watch } from 'vue-demi'
 import { observer } from '@formily/reactive-vue'
-import { useField } from '@formily/vue'
+import { useField, h } from '@formily/vue'
 import { Carousel } from 'ant-design-vue'
 import {
   parseStyleUnit,
@@ -8,7 +8,7 @@ import {
   equals,
   usePrefixCls,
 } from '../__builtins__'
-import { usePage } from '../page/useApi'
+import { usePageLayout } from '../page-layout'
 
 // Types
 import type { VNode } from 'vue-demi'
@@ -57,77 +57,86 @@ export const Banner = observer(
       dataSource: [Object, Array],
       defaultKey: [String, Number],
       height: [String, Number],
-      autoplay: { type: Boolean, default: void 0 },
+      autoplay: { type: Boolean, default: true },
       itemClassName: String,
     },
     setup(props, { attrs, emit }) {
       const fieldRef = useField<Field>()
-      const { scopedDataRequest, dataRequest } = usePage()
+      const pageLayoutRef = usePageLayout()
       const prefixCls = usePrefixCls('portal-banner', attrs.prefixCls as string)
 
       const datas = createDataResource<BannerItem>({
-        scopedDataRequest,
-        dataRequest,
+        scopedDataRequest: pageLayoutRef.value.scopedDataRequest,
+        dataRequest: pageLayoutRef.value.dataRequest,
       })
 
       watch(
         () => props.dataSource,
         (value, old) => {
-          !equals(value, old) &&
+          ;(!datas.$loaded || !equals(value, old)) &&
             datas.read({
-              dataSource: value || [],
+              dataSource: value || (fieldRef.value.dataSource as any),
             })
         },
         { immediate: true, deep: true }
       )
 
       return () => {
-        const { $result = [], $loading, $error } = datas
+        const { $result, $loading, $error } = datas
 
         if ($loading) return null
 
         if ($error)
-          return h('div', { class: `${prefixCls}__error` }, $error.message)
+          return h(
+            'div',
+            { class: `${prefixCls}__error` },
+            { default: () => [$error.message] }
+          )
 
         let initialSlide = 0
         if (
           props.defaultKey &&
-          (initialSlide = $result.findIndex(
+          (initialSlide = $result?.findIndex(
             ({ key }) => key === props.defaultKey
           )) < 0
         ) {
           initialSlide = 0
         }
 
-        const { autoplay = $result.length > 1, height } = props
+        const { autoplay, height } = props
 
         const renderItems = (): VNode[] => {
-          if (height) {
-            return $result.map((item) =>
-              h('a', {
-                class: [
-                  `${prefixCls}__item`,
-                  `${prefixCls}__item--bg`,
-                  props.itemClassName,
-                ],
-                style: {
-                  backgroundImage: `url(${item.imageUrl})`,
-                  height: parseStyleUnit(height),
-                },
-                domProps: {
-                  target: item.linkTarget || '_self',
-                  href: item.linkUrl || 'javascript:;',
-                },
-                on: {
-                  click: () => {
-                    ;(attrs.onItemClick as onItemClick)?.(item)
-                    emit('itemClick', item)
+          const _height = height === 'auto' ? undefined : height
+          if (_height) {
+            return $result?.map((item) =>
+              h(
+                'a',
+                {
+                  class: [
+                    `${prefixCls}__item`,
+                    `${prefixCls}__item--bg`,
+                    props.itemClassName,
+                  ],
+                  style: {
+                    backgroundImage: `url(${item.imageUrl})`,
+                    height: parseStyleUnit(_height),
+                  },
+                  domProps: {
+                    target: item.linkTarget || '_self',
+                    href: item.linkUrl || 'javascript:;',
+                  },
+                  on: {
+                    click: () => {
+                      ;(attrs.onItemClick as onItemClick)?.(item)
+                      emit('itemClick', item)
+                    },
                   },
                 },
-              })
+                {}
+              )
             )
           } else {
-            return $result.map((item) =>
+            return $result?.map((item) =>
               h(
                 'a',
                 {
@@ -143,36 +152,52 @@ export const Banner = observer(
                     },
                   },
                 },
-                [
-                  h('img', {
-                    domProps: {
-                      src: item.imageUrl,
-                      alt: item.imageUrl,
-                    },
-                  }),
-                ]
+                {
+                  default: () => [
+                    h(
+                      'img',
+                      {
+                        domProps: {
+                          src: item.imageUrl,
+                          alt: item.imageUrl,
+                        },
+                      },
+                      {}
+                    ),
+                  ],
+                }
               )
             )
           }
         }
 
+        // attrs 中非on开头的参数传给carousel props
+        const carouselProps = Object.keys(attrs).reduce(
+          (props, key) => {
+            if (!key.startsWith('on')) {
+              props[key] = attrs[key]
+            }
+            return props
+          },
+          {
+            initialSlide,
+            autoplay,
+            afterChange: (current: number) => {
+              const value = $result[current].key
+              ;(attrs.onChange as onChange)?.(value)
+              emit('change', value)
+              fieldRef.value.setValue?.(value)
+            },
+          }
+        )
+
         return h(
           Carousel,
           {
             class: prefixCls,
-            props: {
-              ...attrs,
-              initialSlide,
-              autoplay,
-              afterChange: (current: number) => {
-                const value = $result[current].key
-                ;(attrs.onChange as onChange)?.(value)
-                emit('change', value)
-                fieldRef.value.setValue?.(value)
-              },
-            },
+            props: carouselProps,
           },
-          renderItems()
+          { default: () => [renderItems()] }
         )
       }
     },

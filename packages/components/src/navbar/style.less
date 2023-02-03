@@ -1,15 +1,16 @@
 @import '../__builtins__/styles/common.less';
 @import './menu.less';
 
-@nav-prefix-cls: ~'@{ant-prefix}-protal-nav';
+@nav-prefix-cls: ~'@{ant-portal-prefix}-nav';
 @nav-background-color: @var-primary;
 @nav-z-index:1000;
 @nav-height: 68px;
 @nav-content-height: 48px;
 
 .@{nav-prefix-cls}{
-  position: relative;
   width: 100%;
+  position: relative;
+  z-index: 9;
 
   &__placeholder{
     width: 100%;
@@ -25,19 +26,15 @@
 
   &--fixed &__container{
     position: fixed;
-    top:0;
+    left: 0;
+    top: 0;
     width: 100%;
     z-index: @nav-z-index;
   }
 
-  &-logo{
-    margin-left: 16px;
+  &-logo,&-title{
+    margin-left: 10px;
     max-height: 100%;
-    cursor: pointer;
-  }
-
-  &-title{
-    margin-left: 16px;
     font-size: @font-size-lg;    
     cursor: pointer;
   }
@@ -57,15 +54,16 @@
       white-space: nowrap;
     }
     
-    &__middle{
+    &__main{
       padding: 0 10px;
       flex: 1 1 0%;
       min-width: 0px;
-      display: flex;
+      // display: flex;
       line-height: @nav-content-height;
 
       &--right{
-        justify-content: flex-end;
+        // justify-content: flex-end;
+        text-align: right;
       }
     }
   }

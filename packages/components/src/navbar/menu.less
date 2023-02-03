@@ -1,4 +1,4 @@
-@nav-menu-prefix-cls: ~'@{ant-prefix}-protal-nav-menu';
+@nav-menu-prefix-cls: ~'@{ant-portal-prefix}-nav-menu';
 @nav-menu-color: #000;
 @nav-menu-hover-color: lighten(@nav-menu-color, 10%);
 @nav-menu-dark-color: #fff;
@@ -7,7 +7,7 @@
 .@{nav-menu-prefix-cls}{
   position: relative;
 
-  &.@{ant-prefix}-menu{
+  .@{ant-prefix}-menu{
     line-height: inherit;
     background-color: transparent;
     border-bottom: none;
@@ -21,7 +21,7 @@
     }
   }
   
-  &.@{ant-prefix}-menu-dark{
+  .@{ant-prefix}-menu-dark{
     .@{ant-prefix}-menu-item, .@{ant-prefix}-menu-submenu, .@{ant-prefix}-menu-submenu-title{
       color: @nav-menu-dark-color;
 
@@ -32,7 +32,7 @@
   }
 
   &__error{
-    color: red;
+    color: #f5222d;
     text-align: center;
     line-height: 48px;
   }

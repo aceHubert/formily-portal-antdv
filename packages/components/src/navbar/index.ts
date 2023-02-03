@@ -1,5 +1,5 @@
-import { defineComponent, h } from 'vue-demi'
-import { useField } from '@formily/vue'
+import { defineComponent } from 'vue-demi'
+import { useField, h } from '@formily/vue'
 import { observer } from '@formily/reactive-vue'
 import {
   parseStyleUnit,
@@ -7,7 +7,7 @@ import {
   composeExport,
   usePrefixCls,
 } from '../__builtins__'
-import { usePage } from '../page/useApi'
+import { usePageLayout } from '../page-layout'
 import { NavMenu } from './menu'
 
 export interface NavProps {
@@ -16,6 +16,11 @@ export interface NavProps {
    * @type any (string | slot | VNode)
    */
   logo?: any
+  /**
+   * title
+   * @type any (string | slot | VNode)
+   */
+  title?: any
   /**
    * left container component, logo 会被忽略如果设置 left
    * @type any (string | slot | VNode)
@@ -39,6 +44,10 @@ export interface NavProps {
    */
   height?: string | number
   /**
+   * 背景色
+   */
+  backgroundColor?: string
+  /**
    * content 内容对齐方式，默认：left
    */
   contentAlign: 'left' | 'right'
@@ -49,11 +58,13 @@ const Nav = observer(
     name: 'Navbar',
     props: {
       logo: [String, Object],
+      title: [String, Object],
       left: {},
       right: {},
       fixed: Boolean,
       placeholder: Boolean,
       height: [String, Number],
+      backgroundColor: String,
       contentAlign: {
         type: String,
         validator: (value: string) => {
@@ -63,19 +74,22 @@ const Nav = observer(
     },
     setup(props, { attrs, slots }) {
       const fieldRef = useField()
-      const { containerWidth } = usePage()
-      const prefixCls = usePrefixCls('protal-nav', attrs.prefixCls as string)
+      const pageLayoutRef = usePageLayout()
+      const prefixCls = usePrefixCls('portal-nav', attrs.prefixCls as string)
 
       return () => {
         const {
           logo,
+          title = fieldRef.value.componentProps?.title || fieldRef.value.title,
           height,
           left,
           right,
           placeholder = false,
           fixed = false,
-          contentAlign = 'left',
+          backgroundColor,
+          contentAlign = 'right',
         } = props
+
         const style: Record<string, any> = {}
         const placeholderStyle: Record<string, any> = {}
         if (height) {
@@ -84,57 +98,68 @@ const Nav = observer(
         }
 
         const renderLeft = () => {
-          if (logo) {
-            return h(
-              'div',
-              {
-                class: [`${prefixCls}-content__left`],
-              },
-              [
-                typeof props.logo === 'string'
-                  ? h('img', {
-                      class: `${prefixCls}-logo`,
-                      domProps: {
-                        src: props.logo,
-                        alt: 'logo',
-                      },
-                    })
-                  : h(props.logo, {
-                      class: `${prefixCls}-logo`,
-                    }),
-                fieldRef.value.title &&
+          return h(
+            'div',
+            {
+              class: [`${prefixCls}-content__left`],
+            },
+            {
+              default: () => [
+                slots.logo?.() ||
+                  (typeof logo === 'string'
+                    ? h(
+                        'img',
+                        {
+                          class: `${prefixCls}-logo`,
+                          domProps: {
+                            src: logo,
+                            alt: 'logo',
+                          },
+                        },
+                        {}
+                      )
+                    : resolveComponent(logo, {
+                        class: `${prefixCls}-logo`,
+                      })),
+                (slots.title || title) &&
                   h(
                     'span',
                     { class: `${prefixCls}-title` },
-                    fieldRef.value.title
+                    {
+                      default: () => [
+                        slots.title?.() || resolveComponent(title),
+                      ],
+                    }
                   ),
-              ]
-            )
-          } else if (left) {
-            return h(
-              'div',
-              {
-                class: [`${prefixCls}-content__left`],
-              },
-              [resolveComponent(left)]
-            )
-          }
+                slots.left?.() || resolveComponent(left),
+              ],
+            }
+          )
+        }
 
-          return
+        const renderMain = () => {
+          return h(
+            'div',
+            {
+              class: [
+                `${prefixCls}-content__main`,
+                `${prefixCls}-content__main--${contentAlign}`,
+              ],
+            },
+            { default: () => [slots.default?.()] }
+          )
         }
 
         const renderRight = () => {
-          if (right) {
-            return h(
-              'div',
-              {
-                class: [`${prefixCls}-content__right`],
-              },
-              [resolveComponent(right)]
-            )
-          }
-
-          return
+          return h(
+            'div',
+            {
+              class: [`${prefixCls}-content__right`],
+            },
+            {
+              default: () => [slots.right?.() || resolveComponent(right)],
+            }
+          )
         }
 
         return h(
@@ -143,42 +168,42 @@ const Nav = observer(
             class: [prefixCls, fixed ? `${prefixCls}--fixed` : ''],
             style,
           },
-          [
-            fixed &&
-              placeholder &&
-              h('div', { class: [`${prefixCls}__placeholder`] }),
-            h(
-              'div',
-              {
-                class: [`${prefixCls}__container`],
-              },
-              [
-                h(
-                  'div',
-                  {
-                    class: [`${prefixCls}-content`],
-                    style: {
-                      width: containerWidth,
-                    },
+          {
+            default: () => [
+              fixed &&
+                placeholder &&
+                h('div', { class: [`${prefixCls}__placeholder`] }, {}),
+              h(
+                'div',
+                {
+                  class: [`${prefixCls}__container`],
+                  style: {
+                    backgroundColor,
                   },
-                  [
-                    renderLeft(),
+                },
+                {
+                  default: () => [
                     h(
                       'div',
                       {
-                        class: [
-                          `${prefixCls}-content__middle`,
-                          `${prefixCls}-content__middle--${contentAlign}`,
-                        ],
+                        class: [`${prefixCls}-content`],
+                        style: {
+                          width: pageLayoutRef.value.containerWidth,
+                        },
                       },
-                      slots.default?.()
+                      {
+                        default: () => [
+                          renderLeft(),
+                          renderMain(),
+                          renderRight(),
+                        ],
+                      }
                     ),
-                    renderRight(),
-                  ]
-                ),
-              ]
-            ),
-          ]
+                  ],
+                }
+              ),
+            ],
+          }
         )
       }
     },

@@ -1,47 +1,53 @@
-import { defineComponent, h } from 'vue-demi'
+import { defineComponent } from 'vue-demi'
+import { h } from '@formily/vue'
 import { parseStyleUnit, usePrefixCls } from '../__builtins__'
-import { usePage } from '../page/useApi'
+import { usePageLayout } from '../page-layout'
 
 export interface PageContainerProps {
   /**
    * container with, default: page.containerWidth
    */
-  width?: 'fullwidth' | string | number
+  width?: 'inherit' | string | number
 }
 
 export const PageContainer = defineComponent<PageContainerProps>({
   name: 'PageContainer',
   props: {
-    width: { type: [String, Number] },
+    width: [String, Number],
   },
   setup(props, { attrs, slots }) {
-    const { containerWidth } = usePage()
+    const pageLayoutRef = usePageLayout()
     const prefixCls = usePrefixCls(
-      'protal-page-container',
+      'portal-page-container',
       attrs.prefixCls as string
     )
 
-    const style: Record<string, any> = {
-      minWidth: containerWidth,
-    }
-    if (props.width) {
-      props.width !== 'fullwidth' && (style.width = parseStyleUnit(props.width))
-    } else {
-      style.width = containerWidth
-    }
-
-    return () =>
-      h(
+    return () => {
+      const clasNames: Record<string, boolean> = {
+        [prefixCls]: true,
+      }
+      const style: Record<string, any> = {}
+      if (props.width === undefined || props.width === 'inherit') {
+        if (pageLayoutRef.value.containerWidth === 'fullwidth') {
+          clasNames[`${prefixCls}-fullwidth`] = true
+        } else {
+          style.width = pageLayoutRef.value.containerWidth
+          style.maxWidth = '100%'
+        }
+      } else {
+        style.width = parseStyleUnit(props.width)
+        style.maxWidth = '100%'
+      }
+      
+      return h(
         'div',
         {
-          class: [
-            prefixCls,
-            props.width === 'fullwidth' && `${prefixCls}-fullwidth`,
-          ],
+          class: clasNames,
           style,
         },
-        slots.default?.()
+        { default: () => [slots.default?.()] }
       )
+    }
   },
 })
 
