@@ -1,4 +1,4 @@
-import { defineComponent, unref } from 'vue-demi'
+import { defineComponent } from 'vue-demi'
 import { createBehavior, createResource } from '@designable/core'
 import { uid } from '@designable/shared'
 import {
@@ -13,6 +13,8 @@ import { AllLocales } from '../../locales'
 import { createFieldSchema } from '../Field'
 import './style.less'
 
+import type { TreeNode } from '@designable/core'
+
 export const Navbar = composeExport(
   defineComponent({
     name: 'DnNavbar',
@@ -21,7 +23,7 @@ export const Navbar = composeExport(
       const nodeRef = useTreeNode()
 
       return () => {
-        const node = unref(nodeRef)
+        const node = nodeRef.value
 
         return (
           <FormilyNavbar
@@ -35,7 +37,7 @@ export const Navbar = composeExport(
               ),
             }}
           >
-            {node.children.length ? (
+            {nodeRef.value.children.length ? (
               node.children.map((child) => (
                 <TreeNodeWidget key={uid()} node={child} />
               ))
@@ -71,9 +73,9 @@ export const Navbar = composeExport(
             )
           },
           // allowAppend(target, sources) {
-            // return sources?.every((node) =>
-            //   node.props['x-component'].startsWith('Navbar.')
-            // )
+          // return sources?.every((node) =>
+          //   node.props['x-component'].startsWith('Navbar.')
+          // )
           // },
           // allowSiblings(target, sources) {
           //   // 只允许往后面加

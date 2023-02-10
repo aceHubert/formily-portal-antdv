@@ -1,4 +1,4 @@
-import { defineComponent, unref } from 'vue-demi'
+import { defineComponent } from 'vue-demi'
 import { createBehavior, createResource } from '@designable/core'
 import { uid } from '@designable/shared'
 import {
@@ -23,7 +23,7 @@ export const PageItem = composeExport(
       const nodeRef = useTreeNode()
 
       return () => {
-        const node = unref(nodeRef)
+        const node = nodeRef.value
 
         return (
           <FormilyPageItem

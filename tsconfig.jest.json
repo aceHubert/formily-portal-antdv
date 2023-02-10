@@ -8,7 +8,10 @@
     "module": "commonjs",
     "target": "es5",
     "paths": {
-      "@lj-portal/*": ["./packages/*/src"]
+      "@lj-portal/antdv": ["packages/components/src"],
+      "@lj-portal/antdv/esm/*": ["packages/components/src/*"],
+      "@lj-portal/antdv/lib/*": ["packages/components/src/*"],
+      "@lj-portal/antdv-*": ["packages/*/src"]
     }
   },
   "exclude": ["./packages/*/esm", "./packages/*/lib"]
