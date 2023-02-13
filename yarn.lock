@@ -1297,9 +1297,9 @@
     pascal-case "^3.1.1"
     upper-case "^2.0.1"
 
-"@formily/template@^1.0.0-alpha.0":
+"@formily/template@^1.0.0-alpha.21":
   version "1.0.0-alpha.21"
-  resolved "https://registry.npmmirror.com/@formily/template/-/template-1.0.0-alpha.21.tgz#46f2c9701ba033f319d700247ff839fe20670dda"
+  resolved "https://registry.yarnpkg.com/@formily/template/-/template-1.0.0-alpha.21.tgz#46f2c9701ba033f319d700247ff839fe20670dda"
   integrity sha512-liqTJ0o8i4pNd/X3umm/np+GOdwyT8ED+zbcmcUB8OXQCFjy4jwdSIbZ40uMtRxcxt0e4sybYZzVADF63qMdEw==
   dependencies:
     "@rollup/plugin-commonjs" "^17.0.0"
@@ -2910,6 +2910,13 @@
   dependencies:
     "@typescript-eslint/types" "4.33.0"
     eslint-visitor-keys "^2.0.0"
+
+"@vue-async/resource-manager@^1.0.15":
+  version "1.0.15"
+  resolved "https://registry.yarnpkg.com/@vue-async/resource-manager/-/resource-manager-1.0.15.tgz#c0cc906ebb0716636007d5bf82ae4308a9d8bf28"
+  integrity sha512-ZCb7vgghEgMqVFlq+JC5y3We0E4HWXdZ/80qeOcHLLzpYMff0cdOLxZ99FOY7bycVRRmotCr4XmsECrbxw2Plw==
+  dependencies:
+    warning "^4.0.3"
 
 "@vue/babel-helper-vue-jsx-merge-props@^1.4.0":
   version "1.4.0"
@@ -15801,7 +15808,7 @@ vuepress@^1.8.2:
     opencollective-postinstall "^2.0.2"
     update-notifier "^4.0.0"
 
-warning@^4.0.0:
+warning@^4.0.0, warning@^4.0.3:
   version "4.0.3"
   resolved "https://registry.npmmirror.com/warning/-/warning-4.0.3.tgz#16e9e077eb8a86d6af7d64aa1e05fd85b4678ca3"
   integrity sha512-rpJyN222KWIvHJ/F53XSZv0Zl/accqHR8et1kpaMTD/fLCRxtV8iX8czMzY7sVZupTI3zcUTg8eycS2kNF9l6w==
