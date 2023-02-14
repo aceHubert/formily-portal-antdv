@@ -2,34 +2,36 @@
 @import './menu.less';
 
 @nav-prefix-cls: ~'@{ant-portal-prefix}-nav';
-@nav-background-color: @var-primary;
 @nav-z-index:1000;
 @nav-height: 68px;
 @nav-content-height: 48px;
 
 .@{nav-prefix-cls}{
   width: 100%;
+  height: @nav-height;
+  background-color: @var-primary;
   position: relative;
   z-index: 9;
 
-  &__placeholder{
-    width: 100%;
-    height: @nav-height;
+  &--theme-light {
+    color: @text-color;
   }
 
-  &__container{
-    width: 100%;
-    height: @nav-height;
-    color: #fff;
-    background-color: @nav-background-color;
+  &--theme-dark {
+    color: @text-color-inverse;
   }
 
-  &--fixed &__container{
+  &--fixed {
     position: fixed;
     left: 0;
     top: 0;
     width: 100%;
     z-index: @nav-z-index;
+  }
+
+  &__placeholder{
+    width: 100%;
+    height: @nav-height;
   }
 
   &-logo,&-title{

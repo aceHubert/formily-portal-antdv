@@ -39,10 +39,7 @@ export interface PageLayoutProps {
   shallow?: boolean
 }
 
-type ProvidePageLayoutProps = Omit<
-  PageLayoutProps,
-  'themeVars' | 'containerWidth' | 'scopedDataRequest' | 'dataRequest'
-> & {
+type ProvidePageLayoutProps = PageLayoutProps & {
   themeVars?: {
     primary?: string
     primaryLighter?: string

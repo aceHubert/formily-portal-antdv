@@ -17,11 +17,17 @@ export const Navbar: ISchema & { Menu?: ISchema } = {
       type: 'boolean',
       'x-decorator': 'FormItem',
       'x-component': 'Switch',
+      'x-component-props': {
+        defaultChecked: true,
+      },
     },
     placeholder: {
       type: 'boolean',
       'x-decorator': 'FormItem',
       'x-component': 'Switch',
+      'x-component-props': {
+        defaultChecked: true,
+      },
     },
     height: {
       type: 'string',
@@ -62,7 +68,6 @@ const Menu: ISchema = {
     //   },
     // },
     theme: {
-      default: 'dark',
       type: 'string',
       enum: ['light', 'dark'],
       'x-decorator': 'FormItem',

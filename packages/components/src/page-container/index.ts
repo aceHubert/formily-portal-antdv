@@ -38,7 +38,7 @@ export const PageContainer = defineComponent<PageContainerProps>({
         style.width = parseStyleUnit(props.width)
         style.maxWidth = '100%'
       }
-      
+
       return h(
         'div',
         {

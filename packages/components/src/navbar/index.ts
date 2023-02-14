@@ -1,6 +1,7 @@
-import { defineComponent } from 'vue-demi'
+import { defineComponent, ref, computed, provide, inject } from 'vue-demi'
 import { useField, h } from '@formily/vue'
 import { observer } from '@formily/reactive-vue'
+import tinycolor from 'tinycolor2'
 import {
   parseStyleUnit,
   resolveComponent,
@@ -9,6 +10,9 @@ import {
 } from '../__builtins__'
 import { usePageLayout } from '../page-layout'
 import { NavMenu } from './menu'
+
+// Types
+import type { Ref, InjectionKey } from 'vue-demi'
 
 export interface NavProps {
   /**
@@ -53,6 +57,11 @@ export interface NavProps {
   contentAlign: 'left' | 'right'
 }
 
+export const NavTheme: InjectionKey<Ref<'light' | 'dark'>> = Symbol('NavTheme')
+
+export const useNavTheme = (): Ref<'light' | 'dark'> =>
+  inject(NavTheme, ref('dark'))
+
 const Nav = observer(
   defineComponent<NavProps>({
     name: 'Navbar',
@@ -77,6 +86,19 @@ const Nav = observer(
       const pageLayoutRef = usePageLayout()
       const prefixCls = usePrefixCls('portal-nav', attrs.prefixCls as string)
 
+      const theme = computed(() => {
+        const backgroundColor =
+          props.backgroundColor ?? pageLayoutRef.value.themeVars?.primary
+
+        if (backgroundColor) {
+          const theme = tinycolor(backgroundColor).isLight() ? 'light' : 'dark'
+          return theme
+        }
+        return 'dark'
+      })
+
+      provide(NavTheme, theme)
+
       return () => {
         const {
           logo,
@@ -84,101 +106,41 @@ const Nav = observer(
           height,
           left,
           right,
-          placeholder = false,
-          fixed = false,
+          placeholder = true,
+          fixed = true,
           backgroundColor,
           contentAlign = 'right',
         } = props
 
-        const style: Record<string, any> = {}
-        const placeholderStyle: Record<string, any> = {}
+        let styleHeight: string
         if (height) {
-          style.height = parseStyleUnit(height)
-          placeholderStyle.height = parseStyleUnit(height)
+          styleHeight = parseStyleUnit(height)
         }
 
-        const renderLeft = () => {
-          return h(
-            'div',
-            {
-              class: [`${prefixCls}-content__left`],
-            },
-            {
-              default: () => [
-                slots.logo?.() ||
-                  (typeof logo === 'string'
-                    ? h(
-                        'img',
-                        {
-                          class: `${prefixCls}-logo`,
-                          domProps: {
-                            src: logo,
-                            alt: 'logo',
-                          },
-                        },
-                        {}
-                      )
-                    : resolveComponent(logo, {
-                        class: `${prefixCls}-logo`,
-                      })),
-                (slots.title || title) &&
-                  h(
-                    'span',
-                    { class: `${prefixCls}-title` },
-                    {
-                      default: () => [
-                        slots.title?.() || resolveComponent(title),
-                      ],
-                    }
-                  ),
-                slots.left?.() || resolveComponent(left),
-              ],
-            }
-          )
-        }
-
-        const renderMain = () => {
-          return h(
-            'div',
-            {
-              class: [
-                `${prefixCls}-content__main`,
-                `${prefixCls}-content__main--${contentAlign}`,
-              ],
-            },
-            { default: () => [slots.default?.()] }
-          )
-        }
-
-        const renderRight = () => {
-          return h(
-            'div',
-            {
-              class: [`${prefixCls}-content__right`],
-            },
-            {
-              default: () => [slots.right?.() || resolveComponent(right)],
-            }
-          )
-        }
-
-        return h(
+        const renderContent = h(
           'div',
           {
-            class: [prefixCls, fixed ? `${prefixCls}--fixed` : ''],
-            style,
+            class: [
+              prefixCls,
+              `${prefixCls}--theme-${theme.value}`,
+              {
+                [`${prefixCls}--fixed`]: fixed,
+              },
+            ],
+            style: {
+              backgroundColor,
+              height: styleHeight,
+            },
           },
           {
             default: () => [
-              fixed &&
-                placeholder &&
-                h('div', { class: [`${prefixCls}__placeholder`] }, {}),
               h(
                 'div',
                 {
-                  class: [`${prefixCls}__container`],
+                  class: [`${prefixCls}-content`],
                   style: {
-                    backgroundColor,
+                    width: pageLayoutRef.value.containerWidth,
+                    maxWidth: '100%',
                   },
                 },
                 {
@@ -186,16 +148,58 @@ const Nav = observer(
                     h(
                       'div',
                       {
-                        class: [`${prefixCls}-content`],
-                        style: {
-                          width: pageLayoutRef.value.containerWidth,
-                        },
+                        class: [`${prefixCls}-content__left`],
                       },
                       {
                         default: () => [
-                          renderLeft(),
-                          renderMain(),
-                          renderRight(),
+                          slots.logo?.() ||
+                            (typeof logo === 'string'
+                              ? h(
+                                  'img',
+                                  {
+                                    class: `${prefixCls}-logo`,
+                                    domProps: {
+                                      src: logo,
+                                      alt: 'logo',
+                                    },
+                                  },
+                                  {}
+                                )
+                              : resolveComponent(logo, {
+                                  class: `${prefixCls}-logo`,
+                                })),
+                          (slots.title || title) &&
+                            h(
+                              'span',
+                              { class: `${prefixCls}-title` },
+                              {
+                                default: () => [
+                                  slots.title?.() || resolveComponent(title),
+                                ],
+                              }
+                            ),
+                          slots.left?.() || resolveComponent(left),
+                        ],
+                      }
+                    ),
+                    h(
+                      'div',
+                      {
+                        class: [
+                          `${prefixCls}-content__main`,
+                          `${prefixCls}-content__main--${contentAlign}`,
+                        ],
+                      },
+                      { default: () => [slots.default?.()] }
+                    ),
+                    h(
+                      'div',
+                      {
+                        class: [`${prefixCls}-content__right`],
+                      },
+                      {
+                        default: () => [
+                          slots.right?.() || resolveComponent(right),
                         ],
                       }
                     ),
@@ -205,6 +209,21 @@ const Nav = observer(
             ],
           }
         )
+
+        if (fixed && placeholder) {
+          return h(
+            'div',
+            {
+              class: [`${prefixCls}__placeholder`],
+              style: {
+                height: styleHeight,
+              },
+            },
+            { default: () => [renderContent] }
+          )
+        }
+
+        return renderContent
       }
     },
   })

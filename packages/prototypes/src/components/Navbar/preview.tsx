@@ -184,9 +184,7 @@ export const Navbar = composeExport(
                 },
               ],
               'x-component': 'Navbar.Menu',
-              'x-component-props': {
-                theme: 'dark',
-              },
+              'x-component-props': {},
             },
           },
         ],

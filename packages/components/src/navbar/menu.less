@@ -1,8 +1,8 @@
 @nav-menu-prefix-cls: ~'@{ant-portal-prefix}-nav-menu';
-@nav-menu-color: #000;
-@nav-menu-hover-color: lighten(@nav-menu-color, 10%);
-@nav-menu-dark-color: #fff;
-@nav-menu-hover-dark-color: darken(@nav-menu-dark-color, 10%);
+@nav-menu-color: @text-color;
+@nav-menu-hover-color: lighten(@nav-menu-color, 20%);
+@nav-menu-dark-color: @text-color-inverse;
+@nav-menu-hover-dark-color: darken(@nav-menu-dark-color, 20%);
 
 .@{nav-menu-prefix-cls}{
   position: relative;
@@ -14,9 +14,11 @@
 
     .@{ant-prefix}-menu-item, .@{ant-prefix}-menu-submenu, .@{ant-prefix}-menu-submenu-title{
       color: @nav-menu-color;
+      border-bottom: none;
 
       &:hover, &-active, &-selected{
         color: @nav-menu-hover-color;
+        border-bottom: none;
       }
     }
   }

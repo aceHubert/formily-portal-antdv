@@ -9,6 +9,7 @@ import {
   usePrefixCls,
 } from '../__builtins__'
 import { usePageLayout } from '../page-layout'
+import { useNavTheme } from './index'
 
 // Types
 import type { Field } from '@formily/core'
@@ -45,6 +46,7 @@ export const NavMenu = observer(
       const instance = getCurrentInstance()
       const fieldRef = useField<Field>()
       const pageLayoutRef = usePageLayout()
+      const navThemeRef = useNavTheme()
       const prefixCls = usePrefixCls(
         'portal-nav-menu',
         attrs.prefixCls as string
@@ -93,8 +95,6 @@ export const NavMenu = observer(
             { default: () => [$error.message] }
           )
 
-        const { theme = 'light' } = props
-
         const renderMenuItem = function renderMenuItem(menu: MenuItem) {
           return h(
             Menu.Item,
@@ -114,7 +114,7 @@ export const NavMenu = observer(
                 Menu,
                 {
                   props: {
-                    theme,
+                    theme: props.theme ?? navThemeRef.value,
                     mode: 'horizontal',
                     selectable: false,
                   },
