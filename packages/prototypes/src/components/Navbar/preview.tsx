@@ -11,7 +11,7 @@ import { composeExport } from '@formily/vant/esm/__builtins__'
 import { AllSchemas } from '../../schemas'
 import { AllLocales } from '../../locales'
 import { createFieldSchema } from '../Field'
-import './style.less'
+import './styles.less'
 
 import type { TreeNode } from '@designable/core'
 
