@@ -73,11 +73,11 @@ export const Page = defineComponent({
           }
         )
       }
-
-      warn(
-        !!top.value,
-        '"form" is not provide, will create a form by default! '
-      )
+      process.env.NODE_ENV !== 'production' &&
+        warn(
+          !!top.value,
+          '"form" is not provide, will create a form by default! '
+        )
 
       if (top.value) {
         return renderContent()
