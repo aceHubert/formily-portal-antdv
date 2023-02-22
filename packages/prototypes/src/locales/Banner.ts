@@ -12,6 +12,7 @@ export const Banner = {
           tooltip: '数据源中的 key 值',
         },
         autoplay: '自动播放',
+        dots: '显示指示器',
         height: {
           title: '高度',
           tooltip: '如果设置 auto 则自适应图片高度',
@@ -32,6 +33,7 @@ export const Banner = {
           tooltip: 'key from DataSource',
         },
         autoplay: 'Autoplay',
+        dots: 'show indicators',
         height: {
           title: 'Height',
           tooltip: "Fit from image's height if set auto",

@@ -27,6 +27,14 @@ export const Banner: ISchema = {
         defaultChecked: true,
       },
     },
+    dots: {
+      type: 'boolean',
+      'x-decorator': 'FormItem',
+      'x-component': 'Switch',
+      'x-component-props': {
+        defaultChecked: true,
+      },
+    },
     height: {
       type: 'string | number',
       'x-decorator': 'FormItem',

@@ -37,7 +37,7 @@ export const Navbar = composeExport(
               ),
             }}
           >
-            {nodeRef.value.children.length ? (
+            {node.children.length ? (
               node.children.map((child) => (
                 <TreeNodeWidget key={uid()} node={child} />
               ))
