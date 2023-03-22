@@ -14,7 +14,7 @@
 </template>
 
 <script>
-import { Page, PageContainer, PageItem } from '@lj-portal/antdv'
+import { Page, PageContainer, PageItem } from '@formily-portal/antdv'
 
 export default {
   components: {

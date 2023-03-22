@@ -1,9 +1,9 @@
-# @lj-portal/antdv
+# @formily-portal/antdv
 
 > Formily Component Adaptor
 
 ## Install
 
 ```bash
-npm install @lj-portal/antdv --save
+npm install @formily-portal/antdv --save
 ```

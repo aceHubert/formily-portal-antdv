@@ -1,9 +1,9 @@
-# @lj-portal/antdv-renderer
+# @formily-portal/antdv-renderer
 
 > Formily Designable Settings Form
 
 ## 安装
 
 ```bash
-npm install @lj-portal/antdv-renderer --save
+npm install @formily-portal/antdv-renderer --save
 ```

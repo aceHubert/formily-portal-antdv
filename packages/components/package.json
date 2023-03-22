@@ -1,12 +1,12 @@
 {
-  "name": "@lj-portal/antdv",
+  "name": "@formily-portal/antdv",
   "version": "1.0.0-alpha.0",
   "main": "lib",
   "module": "esm",
   "types": "esm/index.d.ts",
-  "umd:main": "dist/lj-portal.antdv.umd.production.js",
-  "unpkg": "dist/lj-portal.antdv.umd.production.js",
-  "jsdelivr": "dist/lj-portal.antdv.umd.production.js",
+  "umd:main": "dist/formily-portal.antdv.umd.production.js",
+  "unpkg": "dist/formily-portal.antdv.umd.production.js",
+  "jsdelivr": "dist/formily-portal.antdv.umd.production.js",
   "jsnext:main": "esm",
   "sideEffects": [
     "dist/*",

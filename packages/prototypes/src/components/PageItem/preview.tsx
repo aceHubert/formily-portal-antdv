@@ -6,8 +6,8 @@ import {
   TreeNodeWidget,
   DroppableWidget,
 } from '@formily/antdv-designable'
-import { PageItem as FormilyPageItem } from '@lj-portal/antdv'
-import { composeExport } from '@formily/vant/esm/__builtins__'
+import { PageItem as FormilyPageItem } from '@formily-portal/antdv'
+import { composeExport } from '@formily-portal/antdv/esm/__builtins__'
 import { AllSchemas } from '../../schemas'
 import { AllLocales } from '../../locales'
 import { createVoidFieldSchema } from '../Field'

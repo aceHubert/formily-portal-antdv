@@ -8,10 +8,10 @@
     "module": "commonjs",
     "target": "es5",
     "paths": {
-      "@lj-portal/antdv": ["packages/components/src"],
-      "@lj-portal/antdv/esm/*": ["packages/components/src/*"],
-      "@lj-portal/antdv/lib/*": ["packages/components/src/*"],
-      "@lj-portal/antdv-*": ["packages/*/src"]
+      "@formily-portal/antdv": ["packages/components/src"],
+      "@formily-portal/antdv/esm/*": ["packages/components/src/*"],
+      "@formily-portal/antdv/lib/*": ["packages/components/src/*"],
+      "@formily-portal/antdv-*": ["packages/*/src"]
     }
   },
   "exclude": ["./packages/*/esm", "./packages/*/lib"]

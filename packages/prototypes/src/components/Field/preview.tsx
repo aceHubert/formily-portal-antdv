@@ -19,7 +19,7 @@ import {
 import { observer } from '@formily/reactive-vue'
 import { FormItem } from '@formily/antdv'
 import { isArr, isFn, isStr } from '@designable/shared'
-import { composeExport } from '@lj-portal/antdv/esm/__builtins__'
+import { composeExport } from '@formily-portal/antdv/esm/__builtins__'
 import { Container } from '../../common/Container'
 import { AllLocales } from '../../locales'
 

@@ -55,7 +55,7 @@ module.exports = {
     return {
       resolve: {
         alias: {
-          '@lj-portal/antdv': path.resolve(
+          '@formily-portal/antdv': path.resolve(
             __dirname,
             '../../packages/components/src'
           ),

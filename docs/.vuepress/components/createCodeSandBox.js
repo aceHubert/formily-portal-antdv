@@ -4,11 +4,11 @@ const CodeSandBoxHTML = '<div id="app"></div>'
 const CodeSandBoxJS = `
 import Vue from 'vue'
 import App from './App.vue'
-import Element  from 'ant-design-vue';
+import Antdv from 'ant-design-vue';
 import 'ant-design-vue/lib/theme-chalk/index.css';
 
 Vue.config.productionTip = false
-Vue.use(Element, { size: 'small' });
+Vue.use(Antdv, { size: 'small' });
 
 new Vue({
   render: h => h(App),

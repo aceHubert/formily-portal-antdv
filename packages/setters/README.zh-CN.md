@@ -1,9 +1,9 @@
-# @lj-portal/antdv-setters
+# @formily-portal/antdv-setters
 
 > Formily Designable 设置器
 
 ## 安装
 
 ```bash
-npm install @lj-portal/antdv-setters --save
+npm install @formily-portal/antdv-setters --save
 ```

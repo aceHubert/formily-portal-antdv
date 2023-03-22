@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import { Page, PageContainer, Banner } from '@lj-portal/antdv'
+import { Page, PageContainer, Banner } from '@formily-portal/antdv'
 
 export default {
   name: 'Banner',

@@ -13,14 +13,14 @@ vue2.6.x:
 
 ```bash
 $ npm install --save ant-design-vue
-$ npm install --save @formily/core @formily/vue @vue/composition-api @lj-portal/antdv
+$ npm install --save @formily/core @formily/vue @vue/composition-api @formily-portal/antdv
 ```
 
 vue2.7.x 或 vue3:
 
 ```bash
 $ npm install --save ant-design-vue
-$ npm install --save @formily/core @formily/vue @lj-portal/antdv
+$ npm install --save @formily/core @formily/vue @formily-portal/antdv
 ```
 
 ## 快速开始

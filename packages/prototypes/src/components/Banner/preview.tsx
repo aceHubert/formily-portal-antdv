@@ -1,4 +1,4 @@
-import { Banner as FormilyBannner } from '@lj-portal/antdv'
+import { Banner as FormilyBannner } from '@formily-portal/antdv'
 import { composeExport } from '@formily/vant/esm/__builtins__'
 import { createBehavior, createResource } from '@designable/core'
 import { AllSchemas } from '../../schemas'

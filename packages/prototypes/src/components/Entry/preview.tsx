@@ -1,5 +1,5 @@
-import { Entry as FormilyEntry } from '@lj-portal/antdv'
-import { composeExport } from '@formily/vant/esm/__builtins__'
+import { Entry as FormilyEntry } from '@formily-portal/antdv'
+import { composeExport } from '@formily-portal/antdv/esm/__builtins__'
 import { createBehavior, createResource } from '@designable/core'
 import { AllSchemas } from '../../schemas'
 import { AllLocales } from '../../locales'
