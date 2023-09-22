@@ -11,7 +11,7 @@ export const PageLayout = createLocales(Component, {
         },
         containerWidth: {
           title: '内容区域宽度',
-          tooltip: '小于设置宽度时将出现横向滚动条，默认值：1200px',
+          tooltip: '"auto" 将会显示为全屏，默认值：1200px',
         },
         shallow: '是否浅传递',
       },
@@ -26,7 +26,7 @@ export const PageLayout = createLocales(Component, {
         },
         containerWidth: {
           title: 'Container width',
-          tooltip: 'Show scorll when less than setted width，Default: 1200px',
+          tooltip: 'Full screen width when set "auto"，Default: 1200px',
         },
         shallow: 'Shallow',
       },
