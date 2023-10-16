@@ -1,5 +1,5 @@
 import { Banner as FormilyBannner } from '@formily-portal/antdv'
-import { composeExport } from '@formily/vant/esm/__builtins__'
+import { composeExport } from '@formily/antdv/esm/__builtins__'
 import { createBehavior, createResource } from '@designable/core'
 import { AllSchemas } from '../../schemas'
 import { AllLocales } from '../../locales'

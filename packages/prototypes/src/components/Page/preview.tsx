@@ -7,7 +7,7 @@ import { Page as FormilyPage } from '@formily-portal/antdv'
 import { composeExport } from '@formily-portal/antdv/esm/__builtins__'
 import { AllSchemas } from '../../schemas'
 import { AllLocales } from '../../locales'
-import "./styles.less"
+import './styles.less'
 
 const PageComponent = observer(
   defineComponent({
