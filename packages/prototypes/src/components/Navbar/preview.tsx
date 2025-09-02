@@ -161,7 +161,7 @@ export const Navbar = composeExport(
               type: 'void',
               'x-component': 'Navbar',
               'x-component-props': {
-                logo: '//via.placeholder.com/100x50?text=Logo',
+                logo: '//placehold.co/100x50?text=Logo',
                 title: 'Title',
                 contentAlign: 'left',
               },

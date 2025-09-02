@@ -3,9 +3,13 @@
 .DS_Store
 .changelog
 .tea
-npm-debug.log
-lerna-debug.log
+logs
+*.log
 npm-debug.log*
+pnpm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
 package-lock.json
 lib/
 esm/

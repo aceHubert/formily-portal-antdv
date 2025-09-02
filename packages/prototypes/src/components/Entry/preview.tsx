@@ -130,43 +130,43 @@ export const Entry = composeExport(FormilyEntry, {
           enum: [
             {
               text: 'Entry1',
-              icon: '//via.placeholder.com/100x100?text=1',
+              icon: '//placehold.co/100x100?text=1',
               linkUrl: 'javascript:;',
               linkTarget: '_blank',
             },
             {
               text: 'Entry2',
-              icon: '//via.placeholder.com/100x100?text=2',
+              icon: '//placehold.co/100x100?text=2',
               linkUrl: 'javascript:;',
             },
             {
               text: 'Entry3',
-              icon: '//via.placeholder.com/100x100?text=3',
+              icon: '//placehold.co/100x100?text=3',
               linkUrl: 'javascript:;',
             },
             {
               text: 'Entry4',
-              icon: '//via.placeholder.com/100x100?text=4',
+              icon: '//placehold.co/100x100?text=4',
               linkUrl: 'javascript:;',
             },
             {
               text: 'Entry5',
-              icon: '//via.placeholder.com/100x100?text=5',
+              icon: '//placehold.co/100x100?text=5',
               linkUrl: 'javascript:;',
             },
             {
               text: 'Entry6',
-              icon: '//via.placeholder.com/100x100?text=6',
+              icon: '//placehold.co/100x100?text=6',
               linkUrl: 'javascript:;',
             },
             {
               text: 'Entry7',
-              icon: '//via.placeholder.com/100x100?text=7',
+              icon: '//placehold.co/100x100?text=7',
               linkUrl: 'javascript:;',
             },
             {
               text: 'Entry8',
-              icon: '//via.placeholder.com/100x100?text=8',
+              icon: '//placehold.co/100x100?text=8',
               linkUrl: 'javascript:;',
             },
           ],

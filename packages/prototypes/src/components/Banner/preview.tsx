@@ -101,19 +101,19 @@ export const Banner = composeExport(FormilyBannner, {
             {
               key: 1,
               imageUrl:
-                '//via.placeholder.com/1920x300/FF0000/FFFFFF?text=Image1',
+                '//placehold.co/1920x300/FF0000/FFFFFF?text=Image1',
               linkUrl: 'javascript:;',
               linkTarget: '_blank',
             },
             {
               key: 2,
               imageUrl:
-                '//via.placeholder.com/1920x300/008000/FFFFFF?text=Image2',
+                '//placehold.co/1920x300/008000/FFFFFF?text=Image2',
             },
             {
               key: 3,
               imageUrl:
-                '//via.placeholder.com/1920x300/0000FF/FFFFFF?text=Image3',
+                '//placehold.co/1920x300/0000FF/FFFFFF?text=Image3',
             },
           ],
           'x-component': 'Banner',
